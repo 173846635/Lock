@@ -1,3 +1,8 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="com.dhy.yycompany.lock.bean.Room" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page isELIgnored="false" %>
@@ -21,7 +26,8 @@
 </head>
 
 <body>
-<div class="main_container">
+<!--头实体-->
+<div class="main_container dw">
     <div class="navbar-header">
         <div class="versions">
             <a href="#">
@@ -57,13 +63,33 @@
         </div>
     </div>
 </div>
+<!--头虚体-->
+<div class="main_container xt">
+    <div class="navbar-header">
+        <div class="versions">
+            <a href="#">
+                gy公寓
+                <span>版本v0.1</span>
+            </a>
+        </div>
+        <div class="main_date">
+            <a href="#">1月27日星期日</a>
+        </div>
+    </div>
+    <div class="portrait" onmousemove="popBox2()" >
+        <a href="#" on>
+            <div class="tx"><img class="tp" src="../../img/tx1.jpg"></div>
+
+        </a>
+    </div>
+</div>
 <!--主体-->
 <div class="main_xia" style="min-height:100%;">
 
     <!--房态-->
     <div class="house_status">
-        <!--左导航-->
-        <div class="left_navigation">
+        <!--左导航实体-->
+        <div class="left_navigation dw">
             <ul class="houses">
                 <li>
                     <a class="house"  href="#"><i class="iconfont">&#xe60f;</i><span >1号楼</span><button class="xiugai" >修改</button></a>
@@ -76,60 +102,92 @@
                 </li>
             </ul>
         </div>
+
+        <!--左导航虚-->
+        <div class="left_navigation xt zxt">
+
+        </div>
         <!--右边房间窗口-->
         <div class="right_window">
             <div class="card">
                 <a class="ft_card ft" href="index.jsp">房态</a>
             </div>
             <div>
+             <%
+             List<Map<String, Object>> rooms = (List<Map<String, Object>>) request.getAttribute("rooms");
+             for (int i=0;i<rooms.size();i++)
+             {
+                 Map<String, Object> stringObjectMap = rooms.get(i);
+                 String apartmentID = (String) stringObjectMap.get("ApartmentID");//公寓id
+                 String apartmentName = (String) stringObjectMap.get("ApartmentName");//公寓名称
+                 String emptyRooms = (String) stringObjectMap.get("EmptyRooms");//空置房间数
+                 Map<String, Object> rooms1 = (Map<String, Object>) stringObjectMap.get("Rooms");//楼层房间
+
+             %>
                 <div class="bean">
                     <div class="right_house">
-                        <span class="right_house_number">1号楼</span>
-                        <span class="right_house_number1">总空置:168</span>
+                        <span id="ygy<%=apartmentID%>" class="right_house_number"><%=apartmentName%></span>
+                        <span class="right_house_number1">总空置:<%=emptyRooms%></span>
                     </div>
                     <div class="right_floors">
+                    <%
+                        //遍历map
+                        Set set = rooms1.entrySet();
+                        Iterator iterator = set.iterator();
+                        String key=null;
+                        List<Room> value =null;
+                        //楼层循环
+                        while (iterator.hasNext())
+                        {
+                            Map.Entry mapentry = (Map.Entry) iterator.next();
+                            key = (String) mapentry.getKey();
+                            value=(List<Room>)mapentry.getValue();
+
+                    %>
                         <div id="l:1" class="right_floor">
                             <div class="right_floor_z">
-                                <span>1楼</span>
+                                <span><%=key%>楼</span>
                             </div>
                             <!--房间s-->
                             <div class="right_rooms">
-                                <a href="information.html">
-                                <button class="finger right_room">
-                                    <div class="right_room_number">
-                                        <span>101</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                </a>
-                                <a href="open.html">
-                                <button class="finger right_room">
-                                    <div class="right_room_number">
-                                        <span>102</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont" style="color: rgba(255,255,255,0)">&#xe650; </i>
-                                    </div>
-                                </button>
-                                </a>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>103</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont" style="color: rgba(255,255,255,0)">&#xe650; </i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
+                                <%
+                                for(int z=0;z<value.size();z++)
+                                {
+                                    Room room = value.get(z);
+                                    int id = room.getrId();//房id
+                                    String roomNum = room.getrNum();//房号
+
+                                %>
+                                    <%
+                                    if(room.getrResidentNum()!=0)
+                                    {
+                                    %>
+                                    <a href="information?roomId=<%=id%>">
+                                        <button class="finger right_room">
+                                            <div class="right_room_number">
+                                                <span><%=roomNum%></span>
+                                            </div>
+                                            <div class="right_room_icons">
+                                                <i class="iconfont">&#xe650;</i>
+                                            </div>
+                                        </button>
+                                    </a>
+                                <%}else{
+                                %>
+                                    <a href="open?roomId=<%=id%>">
+                                        <button class="finger right_room">
+                                            <div class="right_room_number">
+                                                <span><%=roomNum%></span>
+                                            </div>
+                                            <div class="right_room_icons">
+                                                <i class="iconfont" style="color: rgba(255,255,255,0)">&#xe650; </i>
+                                            </div>
+                                        </button>
+                                    </a>
+                                <%
+                                        }
+                                    }
+                                %>
                                 <button class="right_room" onclick="zsfjpopBox()">
                                     <div class="right_room_number">
                                         <span style=" font-size: 10px;">增删房间</span>
@@ -138,361 +196,33 @@
                                         <i class="iconfont">&#xe659;</i>
                                     </div>
                                 </button>
+
+                                <!--分割线-->
+                                <div  class="wire" style="height:1px;margin-top:6px;margin-bottom:6px;padding:1px;background-color:#ccc"></div>
                             </div>
                         </div>
+
+                            <%
+
+                            }
+                        %>
+
                         <!--分割线-->
                         <div class="wire">
-
                         </div>
                     </div>
                 </div>
                 <HR align=center width=75% color=#ccc SIZE=2>
-                <div class="bean">
-                    <div class="right_house">
-                        <span class="right_house_number">2号楼</span>
-                    </div>
-                    <div class="right_floors">
-                        <div class="right_floor">
-                            <div class="right_floor_z">
-                                <span>1楼</span>
-                            </div>
-                            <!--房间s-->
-                            <div class="right_rooms">
-                                <a href="information.html">
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>101</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                </a>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>102</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>103</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-
-                                <!--分割线-->
-                                <div  class="wire" style="height:1px;margin-top:6px;margin-bottom:6px;padding:1px;background-color:#ccc"></div>
-                            </div>
-
-                        </div>
-
-
-                        <div class="right_floor">
-                            <div class="right_floor_z">
-                                <span>1楼</span>
-                            </div>
-                            <!--房间s-->
-                            <div class="right_rooms">
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>101</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>102</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>103</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button> <button class="right_room">
-                                <div class="right_room_number">
-                                    <span>104</span>
-                                </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <button class="right_room">
-                                    <div class="right_room_number">
-                                        <span>104</span>
-                                    </div>
-                                    <div class="right_room_icons">
-                                        <i class="iconfont">&#xe650;</i>
-                                    </div>
-                                </button>
-                                <!--分割线-->
-                                <div  class="wire" style="height:1px;margin-top:6px;margin-bottom:6px;padding:1px;background-color:#ccc"></div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
+                <%
+                    }
+                %>
             </div>
 
         </div>
     </div>
 
 </div>
-<div>
+<div class="db">
     <div class="ld_footer">
         <div class="ld_footer_in">
             <p>地址：宁波财经学院</p>
@@ -500,6 +230,17 @@
         </div>
     </div>
 </div>
+
+
+<div class="db1 dw">
+    <div class="ld_footer">
+        <div class="ld_footer_in">
+            <p>地址：宁波财经学院</p>
+            <p>联系方式：13355908909</p>
+        </div>
+    </div>
+</div>
+
 
 <!--修改楼弹窗-->
 <div id="popLayer"></div>
@@ -573,8 +314,8 @@
 
     </div>
     <div  class="gb">
-        <div onclick="glycloseBox()" id="b0" class=" xq">提交</div>
-        <div onclick="glycloseBox()" id="b2" class=" xq">取消</div>
+        <div onclick="glycloseBox()" id="b0" class="xq22">提交</div>
+        <div onclick="glycloseBox()" id="b2" class="xq22">取消</div>
     </div>
 
 </div>

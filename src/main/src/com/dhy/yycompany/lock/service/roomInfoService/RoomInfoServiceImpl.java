@@ -2,6 +2,7 @@ package com.dhy.yycompany.lock.service.roomInfoService;
 
 import com.dhy.yycompany.lock.bean.*;
 import com.dhy.yycompany.lock.dao.*;
+import com.dhy.yycompany.lock.utils.AllChange;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,45 +26,57 @@ public class RoomInfoServiceImpl implements RoomInfoService {
      * 4.根据room_id找到所有住户
      */
     @Override
-    public Map<String, Object> getRoomInfo(int room_id) {
-        VRoomUserLockExample vRoomUserLockExample=new VRoomUserLockExample();
-        VRoomUserLockExample.Criteria criteria=vRoomUserLockExample.createCriteria();
-        criteria.andRIdEqualTo(room_id);
-        SqlSession sqlSession=sqlSessionFactory.openSession();
-        VRoomUserLockMapper vRoomUserLockMapper=sqlSession.getMapper(VRoomUserLockMapper.class);
-        List<VRoomUserLock> vRoomUserLockList = vRoomUserLockMapper.selectByExample(vRoomUserLockExample);
+    public Map<String, Object> getRoomInfo(int roomId) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        RoomXMapper roomXMapper = sqlSession.getMapper(RoomXMapper.class);
+        RoomXExample roomXExample = new RoomXExample();
+        RoomXExample.Criteria criteria = roomXExample.createCriteria();
+        criteria.andRIdEqualTo(roomId);
+        List<RoomX> roomXES = roomXMapper.selectByExample(roomXExample);
+        RoomX roomX =null;
+        if(roomXES.size()==1) {
+            roomX = roomXES.get(0);
+            ApartmentMapper apartmentMapper = sqlSession.getMapper(ApartmentMapper.class);
+            Apartment apartment = apartmentMapper.selectByPrimaryKey(roomId);
+
+            roomX.setrApartmentName(apartment.getaName());
+
+            int integer = roomX.getrLockId();
+            LockInfoMapper lockInfoMapper = sqlSession.getMapper(LockInfoMapper.class);
+            LockInfo lockInfo = lockInfoMapper.selectByPrimaryKey(integer);
+            roomX.setOnOff(lockInfo.getlStatus());
+        }
         Map<String, Object> map = new HashMap<>();
-        map.put("time",vRoomUserLockList.get(0).getStayTime()+"~"+vRoomUserLockList.get(0).getRetreatTime());//例子： 2019-01-01～2020-11-11
-        map.put("residentNum",vRoomUserLockList.get(0).getResidentNum());
-        map.put("status",vRoomUserLockList.get(0).getlStatus());
-
-//        System.out.println("time"+vRoomUserLockList.get(0).getStayTime()+"~"+vRoomUserLockList.get(0).getRetreatTime());
-//        System.out.println("residentNum"+vRoomUserLockList.get(0).getResidentNum());
-//        System.out.println("status"+vRoomUserLockList.get(0).getlStatus());
-
+        map.put("roomX",roomX);
 
         UserInfoExample userInfoExample=new UserInfoExample();
         UserInfoExample.Criteria criteria1=userInfoExample.createCriteria();
-        criteria1.andURoomIdEqualTo(room_id);
+        criteria1.andURoomIdEqualTo(roomId);
         UserInfoMapper userInfoMapper=sqlSession.getMapper(UserInfoMapper.class);
         List<UserInfo> userInfoList = userInfoMapper.selectByExample(userInfoExample);
+        AllChange.changeSex(userInfoList);
         System.out.println("-----------------------");
         for (UserInfo u: userInfoList){
             System.out.println(u);
         }
         map.put("users",userInfoList);
-        RoomExample roomExample=new RoomExample();
-        RoomExample.Criteria criteria2=roomExample.createCriteria();
-        criteria2.andRIdEqualTo(room_id);
-        RoomMapper roomMapper=sqlSession.getMapper(RoomMapper.class);
-        List<Room> roomList=roomMapper.selectByExample(roomExample);
-        map.put("price",roomList.get(0).getrPrice());
         System.out.println("map=="+map);
-        sqlSession.commit();
         sqlSession.close();
         return map;
     }
 
+
+    public Room getRoomMessage(int roomId){
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
+        Room room = roomMapper.selectByPrimaryKey(roomId);
+        int integer = room.getrApartmentId();
+        ApartmentMapper apartmentMapper = sqlSession.getMapper(ApartmentMapper.class);
+        Apartment apartment = apartmentMapper.selectByPrimaryKey(integer);
+
+        room.setrApartmentName(apartment.getaName());
+        return room;
+    }
 
     /**
      * 1。lock_id查出lock_info表的信息

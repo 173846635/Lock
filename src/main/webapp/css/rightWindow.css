@@ -1,6 +1,17 @@
 .right_window{
+
     background-color: #f0f8ff;
     font-size: 30px;
+    width:84%;
+    float: right;
+}
+.db{
+    width: 100%;
+}
+.db1{
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
 }
 .card{
     font-size: 20px;
@@ -30,6 +41,7 @@
     font-family: "微软雅黑";
 }
 .right_floor{
+    width: 100%;
     float: left;
 }
 .right_floors::before,.right_floors::after{
@@ -49,7 +61,7 @@
 .right_rooms{
     float: left;
     margin-left: 60px;
-    max-width: 75%;
+    width: 75%;
 }
 .right_room{
 

@@ -1,6 +1,6 @@
 package com.dhy.yycompany.lock.bean;
 
-public class Room{
+public class RoomX {
     private Integer rId;
 
     private String rUuid;
@@ -21,7 +21,13 @@ public class Room{
 
     private Integer rModify;
 
+    private String rentTime;
+
+    private String retreatTime;
+
     private String rApartmentName;//公寓楼名
+
+    private int onOff;//门锁开关
 
     public Integer getrId() {
         return rId;
@@ -58,13 +64,6 @@ public class Room{
     public String getrNum() {
         return rNum;
     }
-
-    public int getrNumInt(){
-        return Integer.parseInt(rNum);
-    }
-
-
-
 
     public void setrNum(String rNum) {
         this.rNum = rNum == null ? null : rNum.trim();
@@ -110,6 +109,22 @@ public class Room{
         this.rModify = rModify;
     }
 
+    public String getRentTime() {
+        return rentTime;
+    }
+
+    public void setRentTime(String rentTime) {
+        this.rentTime = rentTime == null ? null : rentTime.trim();
+    }
+
+    public String getRetreatTime() {
+        return retreatTime;
+    }
+
+    public void setRetreatTime(String retreatTime) {
+        this.retreatTime = retreatTime == null ? null : retreatTime.trim();
+    }
+
     public String getrApartmentName() {
         return rApartmentName;
     }
@@ -118,19 +133,11 @@ public class Room{
         this.rApartmentName = rApartmentName;
     }
 
-    @Override
-    public String toString() {
-        return "Room{" +
-                "rId=" + rId +
-                ", rUuid='" + rUuid + '\'' +
-                ", rApartmentId=" + rApartmentId +
-                ", rFloor=" + rFloor +
-                ", rNum='" + rNum + '\'' +
-                ", rPrice=" + rPrice +
-                ", rResidentNum=" + rResidentNum +
-                ", rLockId=" + rLockId +
-                ", rDelete=" + rDelete +
-                ", rModify=" + rModify +
-                '}';
+    public int getOnOff() {
+        return onOff;
+    }
+
+    public void setOnOff(int onOff) {
+        this.onOff = onOff;
     }
 }

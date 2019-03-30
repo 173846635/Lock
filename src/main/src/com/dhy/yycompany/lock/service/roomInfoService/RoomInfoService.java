@@ -1,5 +1,7 @@
 package com.dhy.yycompany.lock.service.roomInfoService;
 
+import com.dhy.yycompany.lock.bean.Room;
+
 import java.util.Map;
 
 public interface RoomInfoService {
@@ -9,15 +11,18 @@ public interface RoomInfoService {
 
     /**
      * map对象的信息
-     * time：2020-03-04～2222-03-05（租住时限）
-     * residentNum：住户人数
-     * status：门锁状态（1开   0关）
      * users：住户信息list
-     * price：房间价格
+     * roomX：房间信息门锁状态（1开   0关）
      * @param room_id
      * @return
      */
     Map<String,Object> getRoomInfo(int room_id);
+
+    /**
+     * 获取房间信息
+     * @param roomId
+     */
+    public Room getRoomMessage(int roomId);
 
 
 
