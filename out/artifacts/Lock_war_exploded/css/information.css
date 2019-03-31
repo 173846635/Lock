@@ -276,9 +276,8 @@
     z-index: 11;
     width: 160px;
     height: 120px;
-    position: absolute;
     top:62px;
-    right: 5px;
+    right: 30px;
     margin:0px 0px 0px 0px;
     color: #000000;
 }

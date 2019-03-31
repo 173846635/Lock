@@ -10,6 +10,7 @@ html{
     background-color: #f0f8ff;
 }
 .house_status{
+
     min-height:400px;
 }
 .house_status::before,.house_status::after{
@@ -18,6 +19,19 @@ html{
 
 }
 .house_status::after{
+    clear: both;
+}
+
+.house_status1{
+
+    min-height:400px;
+}
+.house_status1::before,.house_status1::after{
+    content: " ";
+    display: table;
+
+}
+.house_status1::after{
     clear: both;
 }
 .dw{

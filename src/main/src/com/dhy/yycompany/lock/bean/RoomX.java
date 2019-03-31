@@ -140,4 +140,24 @@ public class RoomX {
     public void setOnOff(int onOff) {
         this.onOff = onOff;
     }
+
+    @Override
+    public String toString() {
+        return "RoomX{" +
+                "rId=" + rId +
+                ", rUuid='" + rUuid + '\'' +
+                ", rApartmentId=" + rApartmentId +
+                ", rFloor=" + rFloor +
+                ", rNum='" + rNum + '\'' +
+                ", rPrice=" + rPrice +
+                ", rResidentNum=" + rResidentNum +
+                ", rLockId=" + rLockId +
+                ", rDelete=" + rDelete +
+                ", rModify=" + rModify +
+                ", rentTime='" + rentTime + '\'' +
+                ", retreatTime='" + retreatTime + '\'' +
+                ", rApartmentName='" + rApartmentName + '\'' +
+                ", onOff=" + onOff +
+                '}';
+    }
 }

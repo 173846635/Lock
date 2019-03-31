@@ -27,9 +27,12 @@ public class InformationController {
     @RequestMapping("information")
     public String gotoinformation(@RequestParam("roomId") int roomId, ModelMap mod)
     {
+        System.out.println(roomId);
         Map<String, Object> roomInfo = roomInfoServiceImpl.getRoomInfo(roomId);
+        System.out.println("information2");
         RoomX roomX = (RoomX) roomInfo.get("roomX");
         int onOff = roomX.getOnOff();
+        System.out.println("onOff:"+onOff);
         String kg=null;
         if(onOff==1)
         {

@@ -42,7 +42,7 @@ img {
 	border:0;
 }
 
-body{font-size: 12px; font-family:arial,"\5b8b\4f53"; color: #7F7F7F;}
+body{font-size: 12px; font-family:arial,"\5b8b\4f53"; color: #7F7F7F;overflow:hidden;}
 img{display: block;}
 
 /*---------------------------------通用样式------------------------------------*/

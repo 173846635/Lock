@@ -37,7 +37,7 @@ public class ImplTest {
     public void getRoomInfo(){
         ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
         RoomInfoService roomInfoService = (RoomInfoService) context.getBean("roomInfoServiceImpl");
-        Map<String,Object> map=roomInfoService.getRoomInfo(50);
+        Map<String,Object> map=roomInfoService.getRoomInfo(73);
     }
 
 

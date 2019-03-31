@@ -19,11 +19,13 @@
     <link rel="stylesheet" href="../../css/style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="../../js/information.js"></script>
+    <script type="text/javascript" src="../../js/index.js"></script>
     <script type="text/javascript" src="../../js/tc.js"></script>
 </head>
 
-<body>
-<div class="main_container">
+<body >
+<!--头实体-->
+<div class="main_container dw">
     <div class="navbar-header">
         <div class="versions">
             <a href="#">
@@ -35,23 +37,40 @@
             <a href="#">1月27日星期日</a>
         </div>
     </div>
-    <div class="portrait">
-        <a href="#" >
+    <div class="portrait" onmousemove="popBox2()" >
+        <a href="#" on>
             <div class="tx"><img class="tp" src="../../img/tx1.jpg"></div>
 
         </a>
+        <!--角色详细信息弹窗-->
+        <div id="xxxx" class="you "  onmouseout="closeBox2()">
+            <div class="content2">
+                <h4 class="toubt">管理员信息</h4>
+                <div class="wk">
+                    <div  class="jz jz1"><label class="nr left">昵称：</label><div  class="nr xx left">琥珀川小黑</div></div>
+                    <br/>
+                    <div class="jz jz2"><label class="nr left">信息：</label><div class="nr xx left">无</div></div>
+                    <br/>
+                    <div class="jz jz2"><label class="nr left">权限：</label><div class="nr xx left">一级权限</div></div>
+                </div>
+
+            </div>
+            <HR align=center width=100% color=#ccc SIZE=2>
+            <div  class="gb"><div  class="xm mmxg" onclick="glypopBox()">管理员管理</div><div class="xm tc">退出</div></div>
+
+        </div>
     </div>
 </div>
 <!--主体-->
 <div class="main_xia" style="min-height:100%;">
 
     <!--房态-->
-    <div class="house_status">
-        <!--左导航-->
-        <div class="left_navigation">
+    <div class="house_status dw">
+        <!--左导航实体-->
+        <div class="left_navigation dw">
             <ul class="houses">
                 <li>
-                    <a class="house"  href="#"><i class="iconfont">&#xe60f;</i>1号楼<button class="xiugai">修改</button></a>
+                    <a class="house"  href="#"><i class="iconfont">&#xe60f;</i><span >1号楼</span><button class="xiugai" >修改</button></a>
 
                     <ul>
                         <li class="floor"><a href="#">1楼</a></li>
@@ -61,8 +80,13 @@
                 </li>
             </ul>
         </div>
+    </div>
+
+        <%--<!--左导航虚-->--%>
+        <%--<div class="left_navigation xt zxt">--%>
         <!--右边房间窗口-->
-        <div class="right_window">
+        <div class="house_status1 dw">
+            <div class="right_window dw">
             <div class="card">
                 <a class="ft_card ft" href="index">房态</a><span  class="ft"> > </span><a class="ft_card ft"  href="information?roomId=${requestScope.roomX.rId}">${requestScope.roomX.rApartmentName}-${requestScope.roomX.rFloor}楼-${requestScope.roomX.rNum}</a>
              </div>
@@ -93,7 +117,7 @@
                                     <div style="position: relative;width: 125px; height: 25px; line-height: 25px; font-size: 14px; float:left; margin-left: 20px;">
                                         <span class="SAP">关</span>
                                         <div class="onoffswitch">
-                                            <input type="checkbox" name="onoff" class="onoff_checkbox" id="onoff" ${requestScope.kg}>
+                                            <input type="checkbox" name="onoff" class="onoff_checkbox" id="onoff" ${requestScope.onOff}>
                                             <label for="onoff" class="onoff_label" >
                                                 <span class="onoff_inter"></span>
                                                 <span class="onoff_switch"></span>
@@ -172,17 +196,37 @@
             </div>
 
         </div>
+                </div>
     </div>
 
 </div>
-<div>
-    <div class="ld_footer">
-        <div class="ld_footer_in">
-            <p>地址：宁波财经学院</p>
-            <p>联系方式：13355908909</p>
+
+    <%--实--%>
+    <div class="db1 dw">
+        <div class="ld_footer">
+            <div class="ld_footer_in">
+                <p>地址：宁波财经学院</p>
+                <p>联系方式：13355908909</p>
+            </div>
         </div>
     </div>
-</div>
+    <!--角色详细信息弹窗-->
+    <div id="xxxx" class="you dw"  onmouseout="closeBox2()">
+        <div class="content2">
+            <h4 class="toubt">管理员信息</h4>
+            <div class="wk">
+                <div  class="jz jz1"><label class="nr left">昵称：</label><div  class="nr xx left">琥珀川小黑</div></div>
+                <br/>
+                <div class="jz jz2"><label class="nr left">信息：</label><div class="nr xx left">无</div></div>
+                <br/>
+                <div class="jz jz2"><label class="nr left">权限：</label><div class="nr xx left">一级权限</div></div>
+            </div>
+
+        </div>
+        <HR align=center width=100% color=#ccc SIZE=2>
+        <div  class="gb"><div  class="xm mmxg" onclick="glypopBox()">管理员管理</div><div class="xm tc">退出</div></div>
+
+    </div>
 
 <!--修改楼弹窗-->
 <div id="popLayer"></div>

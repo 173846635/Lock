@@ -36,9 +36,9 @@ public class RoomInfoServiceImpl implements RoomInfoService {
         RoomX roomX =null;
         if(roomXES.size()==1) {
             roomX = roomXES.get(0);
+            int apartmentId = roomX.getrApartmentId();
             ApartmentMapper apartmentMapper = sqlSession.getMapper(ApartmentMapper.class);
-            Apartment apartment = apartmentMapper.selectByPrimaryKey(roomId);
-
+            Apartment apartment = apartmentMapper.selectByPrimaryKey(apartmentId);
             roomX.setrApartmentName(apartment.getaName());
 
             int integer = roomX.getrLockId();
