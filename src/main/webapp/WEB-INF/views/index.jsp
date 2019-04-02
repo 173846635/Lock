@@ -185,14 +185,7 @@
     </div>
 
 </div>
-<%--<div class="db">--%>
-    <%--<div class="ld_footer">--%>
-        <%--<div class="ld_footer_in">--%>
-            <%--<p>地址：宁波财经学院</p>--%>
-            <%--<p>联系方式：13355908909</p>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>
+
 
 
 <div class="db1 dw">
@@ -218,13 +211,13 @@
             <a href="#">1月27日星期日</a>
         </div>
     </div>
-    <div class="portrait" onmousemove="popBox2()" >
+    <div class="portrait" onmousemove="popBox2()"  onmouseout="closeBox2()">
         <a href="#" on>
             <div class="tx"><img class="tp" src="../../img/tx1.jpg"></div>
 
         </a>
         <!--角色详细信息弹窗-->
-        <div id="xxxx" class="you dw"  onmouseout="closeBox2()">
+        <div id="xxxx" class="you dw"  >
             <div class="content2">
                 <h4 class="toubt">管理员信息</h4>
                 <div class="wk">
@@ -264,13 +257,16 @@
 </div>
 
 <!--管理管理员弹窗-->
+<div class="gly">
 <div id="popLayer1"></div>
 <div id="glygl" class="popBox ke">
     <div class="close">
         <a  href="javascript:void(0)" onclick="closeBox()" class="gb iconfont">&#xe613;</a>
     </div>
+    <div class="myxx"><div class="myxx2">我的信息</div></div>
     <div class="content">
-        <table class="table ke ys">
+        <div class="table ke ys">
+        <table >
             <thead>
             <th>账号</th>
             <th>密码</th>
@@ -280,17 +276,19 @@
             </thead>
             <tbody id="neirong">
             <tr >
-                <td class="dx"><input readonly="value" style="background:#CCCCCC;" value="root" class="kp"></input></td>
-                <td class="dx"><input value="123456"  class="kp"></td>
-                <td class="dx"><input value="宋明豫"  class="kp"></td>
-                <td class="dx"><input readonly="value"  style="background:#CCCCCC;"   class="kp"value="1" ></td>
+                <td class="dx"><input id="myAccount" readonly="value" style="background:#CCCCCC;" value="${requestScope.administrator.adminAccount}" class="kp"></input></td>
+                <td class="dx"><input id="myPassword" value="${requestScope.administrator.adminPassword}"  class="kp"></td>
+                <td class="dx"><input id="myName" value="${requestScope.administrator.adminName}"  class="kp"></td>
+                <td class="dx"><input id="myPermission" readonly="value"  style="background:#CCCCCC;"   class="kp"value="${requestScope.administrator.adminPermission}" ></td>
                 <td class="dx"><button class="qrxg">确认修改</button></td>
             </tr>
 
             </tbody>
         </table>
-
-        <table class="table ke ys">
+        </div>
+        <div class="myxx"><div class="myxx2">其他管理员<span  class="xin" onclick="xjglypopBox()">新&nbsp;建</span></div></div>
+        <div class="table ke ys">
+        <table id="other">
             <thead>
             <th>账号</th>
             <th>密码</th>
@@ -299,22 +297,28 @@
             <th>操作</th>
             </thead>
             <tbody id="neirong2">
-            <tr>
-                <td class="dx"><input readonly="value"  style="background:#CCCCCC;"  class="kp" value="root" ></input></td>
-                <td class="dx"><input   class="kp"  value="123456"></td>
-                <td class="dx"><input   class="kp"  value="宋明豫"></td>
-                <td class="dx"><input readonly="value"  style="background:#CCCCCC;"   class="kp"value="2" ></td>
-                <td class="dx"><button class="qrxg">删除</button></td>
-            </tr>
-            <tr>
-                <td class="dx"><input readonly="value"  style="background:#CCCCCC;"  class="kp" value="admin" ></input></td>
-                <td class="dx"><input   class="kp"  value="123456"></td>
-                <td class="dx"><input   class="kp"  value="马琦钢"></td>
-                <td class="dx"><input readonly="value"  style="background:#CCCCCC;"   class="kp"value="2" ></td>
-                <td class="dx"><button class="qrxg">删除</button></td>
-            </tr>
+
             </tbody>
         </table>
+        <div>
+            <div id="jihao" style="display: none;">
+                <input id="dq" type="hidden" value="1">
+               <input id="zg" type="hidden" value="1">
+            </div>
+
+            <nav  class="fenye navs" aria-label="Page navigation">
+                <ul class="col-md-offset-4 pagination">
+                    <li><a class="shouye" id="shouye" onclick="getOtherMessage(this.id)">首&nbsp;&nbsp;&nbsp;&nbsp;页</a></li>
+                    <li><a class="shang" id="shang" onclick="getOtherMessage(this.id)">上一页</a></li>
+                    <li><a class="xia" id="xia" onclick="getOtherMessage(this.id)">下一页</a></li>
+                    <li><a class="wei" id="wei" onclick="getOtherMessage(this.id)">尾&nbsp;&nbsp;&nbsp;&nbsp;页</a></li>
+
+                </ul>
+
+            </nav>
+            <div id="page" class="zxc clearfix"></div>
+        </div>
+        </div>
 
     </div>
     <div  class="gb">
@@ -323,9 +327,27 @@
     </div>
 
 </div>
+</div>
 
+<!--新建管理员弹窗-->
+<div id="popLayer2"></div>
+<div id="xjglypopBox" class="popBox ke">
+    <!--新建管理员弹窗1-->
+    <div class="close">
+        <a  href="javascript:void(0)" onclick="xjglycloseBox()" class="gb iconfont">&#xe613;</a>
+    </div>
+    <div class="content">
+        <h4>新建管理员</h4>
+        <div ><label>账号：</label><input  id="name2" class="form-control" type="text" value=""></div>
+        <br/>
+        <div ><label>密码：</label><input  id="password2" class="form-control" type="text" value=""></div>
+    </div>
+    <div onclick="xjglycloseBox()" class="gb"><div id="b22" class="bd xyb finger">确认</div></div>
+
+</div>
 
 <!--增删房间弹窗-->
+<div id="popLayer2"></div>
 <div id="zsfjtc" class="popBox ke">
     <div class="close">
         <a  href="javascript:void(0)" onclick="closeBox()" class="gb iconfont">&#xe613;</a>
@@ -349,7 +371,7 @@
                     <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh" onclick="fjscjh(tcfj3)">&#xe613;</div>
                 </div>
             </div>
-            <div id="tcfj4" class=" zsfjdiv">
+            <div id="tcfj4" class="zsfjdiv">
                 <div class="right_room_number1">
                     <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
                 </div>

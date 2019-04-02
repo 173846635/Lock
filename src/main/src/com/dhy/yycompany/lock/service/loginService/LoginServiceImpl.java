@@ -42,6 +42,7 @@ public class LoginServiceImpl implements LoginService{
         //System.out.println(borrowSellExample);
         AdministratorExample.Criteria criteria = administratorExample.createCriteria();
         criteria.andAdminAccountEqualTo(account);
+        criteria.andAdminDeleteEqualTo(0);
         List<Administrator> administrators = administratorMapper.selectByExample(administratorExample);
         if(administrators.size()==0)
         {
@@ -50,7 +51,8 @@ public class LoginServiceImpl implements LoginService{
         }
         else{
 
-            Administrator administrator = administrators.get(0);
+            Administrator administrator;
+            administrator = administrators.get(0);
             id = administrator.getAdminId();
             System.out.println("id="+id);
             //System.out.println(borrowSell.getPassword());

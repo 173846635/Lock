@@ -53,6 +53,43 @@ img{display: block;}
 .h70{height: 70px;}
 .no_mr{margin-right: 0 !important;}
 
+.navs{
+	width: 100%;
+}
+.navs::before,.navs::after{
+	content: " ";
+	display: table;
+
+}
+.navs::after{
+	clear: both;
+}
+.clearfix{
+	float: left;
+	margin-top: -20px;
+}
+.pagination {
+	float: right;
+	display: inline-block;
+	margin-top: 20px;
+	width: 200px;
+	border-radius:10px 10px;
+	margin-right: 5px;
+}
+.pagination li{
+	float: left;
+	min-width: 25px;
+	width: 50px;
+	list-style: none;
+	font-size: 10px;
+	cursor:pointer;
+	text-align:center;
+}
+.pagination li:hover{
+	background-color: #2a6496;
+	border-radius:10px 10px;
+}
+
 /*---------------------------------头部------------------------------------*/
 .ld_header{height: 106px; border-bottom: 2px solid #336699;}
 .ld_header_in{width: 1000px; margin: 0 auto;}

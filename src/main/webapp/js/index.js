@@ -17,6 +17,12 @@ function closeBox() {
     popLayer.style.display = "none";
 }
 
+
+
+
+
+
+
 /*点击弹出按钮*/
 function popBox2() {
     console.log("弹出")
@@ -42,8 +48,137 @@ function fjscjh(id){
 
 }
 
+//获取个人管理员信息
+function getmyMessage() {
+    $.ajax({
+        url: 'myMessage',
+        type: 'GET',
+        dataType: 'json',
+        async: true,
+        success:function(data){
+            console.log(data);
+            var myAccount=data["adminAccount"];
+            var myPassword=data["adminPassword"];
+            var myName=data["adminName"];
+            var myPermission=data["adminPermission"];
+           $('#myAccount').val(myAccount);
+            $('#myPassword').val(myPassword);
+            $('#myName').val(myName);
+            $('#myPermission').val(myPermission);
+        },
+        function(){
+            console.log("错误");
+        }
+    });
+}
+
+//获取其他管理员信息
+function getOtherMessage(id) {
+    var dq1 =$.trim($('#dq').val());//当前页
+    var zg1 =$.trim($('#zg').val());//总共
+    var dq = parseInt(dq1);
+    var zg = parseInt(zg1);
+    console.log("zg="+dq)
+    console.log("dq="+zg)
+    var jsona = {};
+
+    jsona["pageNum"] =  1;
+    if(id=="shouye")
+    {
+        jsona["pageNum"] =  1;
+    }else if(id=="shang")
+    {
+        if(dq>1)
+        {jsona["pageNum"] =  dq-1;
+        }else {
+            jsona["pageNum"] =  1;
+        }
+
+    }
+    else if(id=="xia")
+    {
+        console.log("hahahaha");
+        console.log(dq);
+        console.log(zg);
+        if(dq<zg)
+        {
+            jsona["pageNum"] =  dq+1;
+        }else {
+            jsona["pageNum"] =  zg;
+        }
+    }
+    else if(id=="wei")
+    {
+        jsona["pageNum"] =  zg;
+    }
+    console.log(jsona["pageNum"]);
+
+    console.log(jsona);
+
+
+
+    $.ajax({
+        url: 'otherMessage',
+        type: 'GET',
+        data:jsona,
+        dataType: 'json',
+        async: true,
+        success:function(data){
+            console.log(data);
+            var pageHelperMessage = data["pageHelperMessage"];
+            $("#page").empty();
+            var txt2 ="当前"+pageHelperMessage["pageNum"]+"页，总共"+pageHelperMessage["pages"]+"页，共"+pageHelperMessage["total"]+"条记录";
+            $("#page").append(txt2);
+            var administratorList=data["administratorList"];
+            txt1="";
+            for(var key in administratorList)
+            {
+                var show=administratorList[key];
+                console.log(show);
+                console.log(show[4]);
+                txt1=txt1+"<tr>\n" +
+                    "                <td class=\"dx\"><input readonly=\"value\"  style=\"background:#CCCCCC;\"  class=\"kp\" value=\""+show["adminAccount"]+"\" ></input></td>\n" +
+                    "                <td class=\"dx\"><input readonly=\"value\"   class=\"kp\" style=\"background:#CCCCCC;\"  value=\""+show["adminPassword"]+"\"></td>\n" +
+                    "                <td class=\"dx\"><input readonly=\"value\"   class=\"kp\" style=\"background:#CCCCCC;\"  value=\""+show["adminName"]+"\"></td>\n" +
+                    "                <td class=\"dx\"><input readonly=\"value\"  style=\"background:#CCCCCC;\"   class=\"kp\"value=\""+show["adminPermission"]+"\" ></td>\n" +
+                    "                <td class=\"dx\"><button id=\""+show["adminId"]+"\" class=\"qrxg\">删除</button></td>\n" +
+                    "            </tr>";
+
+            }
+            $("#neirong2").empty();
+            $("#neirong2").append(txt1);
+
+            var text3="<input id=\"dq\" type=\"hidden\" value=\""+pageHelperMessage["pageNum"]+"\">\n" +
+                "                                        <input id=\"zg\" type=\"hidden\" value=\""+pageHelperMessage["pages"]+"\">";
+            $("#jihao").empty();
+            $("#jihao").append(text3);
+        },
+        function(){
+            console.log("错误");
+        }
+    });
+}
 
 $(function() {
+    //获取本人信息
+    getmyMessage()
+    //获取其他管理员信息
+    getOtherMessage("shouye")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     var n=1;
     //弹出
     $(document).on("click",".xiugai",function(){

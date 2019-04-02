@@ -63,7 +63,7 @@ public class ImplTest {
         map.put("FailureTime","2019-03-29");
         ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
         AdministratorService administratorService = (AdministratorService) context.getBean("administratorServiceImpl");
-        int result=administratorService.setkey(map);
+        int result=administratorService.addkey(map);
         if(result==0){
             System.out.println("成功");
         }else{

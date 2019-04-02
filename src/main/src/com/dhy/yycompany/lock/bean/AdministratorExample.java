@@ -713,6 +713,126 @@ public class AdministratorExample {
             addCriterion("admin_password not between", value1, value2, "adminPassword");
             return (Criteria) this;
         }
+
+        public Criteria andAdminModifyIsNull() {
+            addCriterion("admin_modify is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyIsNotNull() {
+            addCriterion("admin_modify is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyEqualTo(Integer value) {
+            addCriterion("admin_modify =", value, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyNotEqualTo(Integer value) {
+            addCriterion("admin_modify <>", value, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyGreaterThan(Integer value) {
+            addCriterion("admin_modify >", value, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyGreaterThanOrEqualTo(Integer value) {
+            addCriterion("admin_modify >=", value, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyLessThan(Integer value) {
+            addCriterion("admin_modify <", value, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyLessThanOrEqualTo(Integer value) {
+            addCriterion("admin_modify <=", value, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyIn(List<Integer> values) {
+            addCriterion("admin_modify in", values, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyNotIn(List<Integer> values) {
+            addCriterion("admin_modify not in", values, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyBetween(Integer value1, Integer value2) {
+            addCriterion("admin_modify between", value1, value2, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminModifyNotBetween(Integer value1, Integer value2) {
+            addCriterion("admin_modify not between", value1, value2, "adminModify");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteIsNull() {
+            addCriterion("admin_delete is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteIsNotNull() {
+            addCriterion("admin_delete is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteEqualTo(Integer value) {
+            addCriterion("admin_delete =", value, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteNotEqualTo(Integer value) {
+            addCriterion("admin_delete <>", value, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteGreaterThan(Integer value) {
+            addCriterion("admin_delete >", value, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteGreaterThanOrEqualTo(Integer value) {
+            addCriterion("admin_delete >=", value, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteLessThan(Integer value) {
+            addCriterion("admin_delete <", value, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteLessThanOrEqualTo(Integer value) {
+            addCriterion("admin_delete <=", value, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteIn(List<Integer> values) {
+            addCriterion("admin_delete in", values, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteNotIn(List<Integer> values) {
+            addCriterion("admin_delete not in", values, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteBetween(Integer value1, Integer value2) {
+            addCriterion("admin_delete between", value1, value2, "adminDelete");
+            return (Criteria) this;
+        }
+
+        public Criteria andAdminDeleteNotBetween(Integer value1, Integer value2) {
+            addCriterion("admin_delete not between", value1, value2, "adminDelete");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

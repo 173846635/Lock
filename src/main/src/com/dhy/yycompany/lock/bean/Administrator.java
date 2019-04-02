@@ -1,7 +1,7 @@
 package com.dhy.yycompany.lock.bean;
 
 public class Administrator {
-    private Integer adminId;//宋明豫1234567
+    private Integer adminId;
 
     private String adminUuid;
 
@@ -18,6 +18,10 @@ public class Administrator {
     private String adminAccount;
 
     private String adminPassword;
+
+    private Integer adminModify;
+
+    private Integer adminDelete;
 
     public Integer getAdminId() {
         return adminId;
@@ -89,5 +93,21 @@ public class Administrator {
 
     public void setAdminPassword(String adminPassword) {
         this.adminPassword = adminPassword == null ? null : adminPassword.trim();
+    }
+
+    public Integer getAdminModify() {
+        return adminModify;
+    }
+
+    public void setAdminModify(Integer adminModify) {
+        this.adminModify = adminModify;
+    }
+
+    public Integer getAdminDelete() {
+        return adminDelete;
+    }
+
+    public void setAdminDelete(Integer adminDelete) {
+        this.adminDelete = adminDelete;
     }
 }

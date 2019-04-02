@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -137,12 +138,62 @@ public class RoomInfoServiceImpl implements RoomInfoService {
 
     @Override
     public void deleteRoom(int roomID) {
-
+        RoomExample roomExample = new RoomExample();
+        RoomExample.Criteria criteria = roomExample.createCriteria();
+        criteria.andRIdEqualTo(roomID);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
+        List<Room> roomList = roomMapper.selectByExample(roomExample);
+        Map<String, String> map = new HashMap<>();
+        if (roomList.get(0).getrResidentNum() == 0) {
+            //没有住户，可以删除房间
+            Room room = new Room();
+            room.setrId(roomID);
+            room.setrDelete(1);
+            int num = roomMapper.updateByPrimaryKeySelective(room);
+            if (num == 1) {
+                map.put("result", "0");
+                map.put("message", "删除房间成功");
+            }
+        } else {
+            //存在用户，不能删除房间
+            map.put("result", "1");
+            map.put("message", "房间存在用户，不能删除");
+        }
+        System.out.println(map);
     }
 
     @Override
-    public Map<String, String> addRoom(int roomNum) {
-
-        return null;
+    public Map<String, String> addRoom(String apartmentID, String roomNum) {
+        RoomExample roomExample = new RoomExample();
+        RoomExample.Criteria criteria = roomExample.createCriteria();
+        criteria.andRNumEqualTo(roomNum)
+                .andRApartmentIdEqualTo(Integer.valueOf(apartmentID));
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
+        List<Room> roomList = roomMapper.selectByExample(roomExample);
+        Map<String, String> map = new HashMap<>();
+        if (roomList != null && roomList.size() != 0) {
+            //该房间号存在
+            map.put("result", "1");
+            map.put("message", "房间已经存在");
+        } else {
+            //房间号不存在
+            Room room = new Room();
+            String uuid = UUID.randomUUID()
+                    .toString().replaceAll("-", "");
+            room.setrUuid(uuid);
+            room.setrApartmentId(Integer.valueOf(apartmentID));
+            room.setrFloor(roomNum.charAt(0) - '0');
+            room.setrNum(roomNum);
+            room.setrPrice(0);
+            room.setrResidentNum(0);
+            room.setrLockId(0);
+            room.setrDelete(0);
+            room.setrModify(0);
+            map.put("result", "0");
+            map.put("message", "添加房间成功");
+        }
+        return map;
     }
 }
