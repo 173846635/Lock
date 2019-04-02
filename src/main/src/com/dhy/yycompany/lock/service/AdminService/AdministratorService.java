@@ -9,7 +9,7 @@ public interface AdministratorService {
     //管理员生成密码
     int addkey(Map<String, String> map);
     //修改管理员信息
-    Map<String,String> modifyAdminInfo(int adminID, String password, String newName);
+    Map<String,Object> modifyAdminInfo(int adminID, String password, String newName);
     //获取单个管理员信息
     JSON getInfo(int adminID);
     //获取所有管理员信息

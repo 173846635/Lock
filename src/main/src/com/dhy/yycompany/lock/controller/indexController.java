@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,5 +76,21 @@ public class indexController {
         int adminId = (int) session.getAttribute("adminId");
         JSON info = administratorServiceImpl.getInfos(adminId,pageNum);
         return info;
+    }
+
+    //修改我的信息
+    @RequestMapping("updateMyMessage")
+    @ResponseBody
+    public JSON updateMyMessage(@RequestParam("password") String password,@RequestParam("newName") String newName)
+    {
+        HttpSession session = GetSessionUtil.getSession();
+        int adminId = (int) session.getAttribute("adminId");
+        Map<String, Object> stringStringMap = administratorServiceImpl.modifyAdminInfo(adminId, password, newName);
+        JSON info=null;
+        info = administratorServiceImpl.getInfo(adminId);
+        System.out.println(info);
+        stringStringMap.put("content",info);
+        JSON jsonObject = new JSONObject(stringStringMap);
+        return jsonObject;
     }
 }

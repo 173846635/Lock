@@ -159,6 +159,37 @@ function getOtherMessage(id) {
     });
 }
 
+//修改本人信息
+function updateMyMessage(){
+    var myPassword0=$.trim($('#myPassword').val());
+    var myName0=$.trim($('#myName').val());
+    var jsona = {};
+    jsona["password"] =  myPassword0;
+    jsona["newName"] =  myName0;
+    $.ajax({
+        url: 'updateMyMessage',
+        type: 'GET',
+        data:jsona,
+        dataType: 'json',
+        async: true,
+        success:function(data){
+            console.log(data);
+            alert(data["message"])
+            var content=data["content"];
+            var myAccount=content["adminAccount"];
+            var myPassword=content["adminPassword"];
+            var myName=content["adminName"];
+            var myPermission=content["adminPermission"];
+            $('#myAccount').val(myAccount);
+            $('#myPassword').val(myPassword);
+            $('#myName').val(myName);
+            $('#myPermission').val(myPermission);
+        },
+        function(){
+            console.log("错误");
+        }
+    });
+}
 $(function() {
     //获取本人信息
     getmyMessage()

@@ -280,7 +280,7 @@
                 <td class="dx"><input id="myPassword" value="${requestScope.administrator.adminPassword}"  class="kp"></td>
                 <td class="dx"><input id="myName" value="${requestScope.administrator.adminName}"  class="kp"></td>
                 <td class="dx"><input id="myPermission" readonly="value"  style="background:#CCCCCC;"   class="kp"value="${requestScope.administrator.adminPermission}" ></td>
-                <td class="dx"><button class="qrxg">确认修改</button></td>
+                <td class="dx"><button  onclick="updateMyMessage()" class="qrxg">确认修改</button></td>
             </tr>
 
             </tbody>

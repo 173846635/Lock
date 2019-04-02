@@ -41,6 +41,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         SqlSession sqlSession=sqlSessionFactory.openSession();
         KeyInfoMapper keyInfoMapper=sqlSession.getMapper(KeyInfoMapper.class);
         int num=keyInfoMapper.insert(keyInfo);
+        sqlSession.close();
         if(num==1){
             System.out.println("添加密码成功");
             return 0;
@@ -51,7 +52,16 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public Map<String, String> modifyAdminInfo(int adminID, String password, String newName) {
+    public Map<String, Object> modifyAdminInfo(int adminID, String password, String newName) {
+        System.out.println("password:"+password);
+        System.out.println("newName:"+newName);
+        if(password==null||newName==null||password==""||newName=="")
+        {
+            Map<String, Object> map=new HashMap<>();
+            map.put("result", 0);
+            map.put("message", "修改管理员失败");
+            return map;
+        }
         SqlSession sqlSession=sqlSessionFactory.openSession();
         AdministratorMapper administratorMapper=sqlSession.getMapper(AdministratorMapper.class);
         Administrator administrator=new Administrator();
@@ -60,15 +70,15 @@ public class AdministratorServiceImpl implements AdministratorService {
         administrator.setAdminName(newName);
         int num=administratorMapper.updateByPrimaryKeySelective(administrator);
         System.out.println("修改了管理员"+num+"条信息");
-        Map<String, String> map=new HashMap<>();
+        Map<String, Object> map=new HashMap<>();
         if(num==1){
-            map.put("result", "0");
+            map.put("result", 0);
             map.put("message", "修改管理员成功");
         }else{
-            map.put("result", "1");
+            map.put("result", 1);
             map.put("message", "修改管理员失败");
         }
-
+        sqlSession.close();
         return map;
     }
 
@@ -83,6 +93,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         System.out.println("administrator="+administrator);
         JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSON(administrator).toString());
         System.out.println("000="+jsonObject);
+        sqlSession.close();
         return jsonObject;
     }
 
@@ -114,6 +125,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         messages.put("administratorList", toJSON);
         JSONObject json = new JSONObject(messages);
         System.out.println("000="+json);
+        sqlSession.close();
         return json;
     }
 
@@ -158,7 +170,7 @@ public class AdministratorServiceImpl implements AdministratorService {
             map.put("result", "1");
             map.put("message", "删除管理员失败");
         }
-
+        sqlSession.close();
         return map;
     }
 }
