@@ -1,46 +1,5 @@
 
-/*点击弹出按钮*/
-function popBox() {
-    console.log("弹出")
-    var popBox = document.getElementById("popBox");
-    var popLayer = document.getElementById("popLayer");
-    popBox.style.display = "block";
-    popLayer.style.display = "block";
-
-};
-
-/*点击关闭按钮*/
-function closeBox() {
-    var popBox = document.getElementById("popBox");
-    var popLayer = document.getElementById("popLayer");
-    popBox.style.display = "none";
-    popLayer.style.display = "none";
-}
-
-
-
-
-
-
-
-/*点击弹出按钮*/
-function popBox2() {
-    console.log("弹出")
-    var popBox = document.getElementById("xxxx");
-    //var popLayer = document.getElementById("popLayer");
-    popBox.style.display = "block";
-   // popLayer.style.display = "block";
-
-};
-
-function closeBox2() {
-    var popBox = document.getElementById("xxxx");
-   // var popLayer = document.getElementById("popLayer");
-    popBox.style.display = "none";
-   // popLayer.style.display = "none";
-}
-
-//删除房间
+//删除房间（页面删除）
 function fjscjh(id){
     console.log(id)
     var tr="'#"+id+"'"
@@ -48,110 +7,59 @@ function fjscjh(id){
 
 }
 
-//获取个人管理员信息
-function getmyMessage() {
-    $.ajax({
-        url: 'myMessage',
-        type: 'GET',
-        dataType: 'json',
-        async: true,
-        success:function(data){
-            console.log(data);
-            var myAccount=data["adminAccount"];
-            var myPassword=data["adminPassword"];
-            var myName=data["adminName"];
-            var myPermission=data["adminPermission"];
-           $('#myAccount').val(myAccount);
-            $('#myPassword').val(myPassword);
-            $('#myName').val(myName);
-            $('#myPermission').val(myPermission);
-        },
-        function(){
-            console.log("错误");
-        }
-    });
-}
 
-//获取其他管理员信息
-function getOtherMessage(id) {
-    var dq1 =$.trim($('#dq').val());//当前页
-    var zg1 =$.trim($('#zg').val());//总共
-    var dq = parseInt(dq1);
-    var zg = parseInt(zg1);
-    console.log("zg="+dq)
-    console.log("dq="+zg)
+
+
+//增删房间页面
+function getRoomsNum(id){
+    var ids= id.split('_');
+    var apartmentId= ids[0];
+    var floor= ids[1];
+   // console.log("id="+adminid1);
     var jsona = {};
-
-    jsona["pageNum"] =  1;
-    if(id=="shouye")
-    {
-        jsona["pageNum"] =  1;
-    }else if(id=="shang")
-    {
-        if(dq>1)
-        {jsona["pageNum"] =  dq-1;
-        }else {
-            jsona["pageNum"] =  1;
-        }
-
-    }
-    else if(id=="xia")
-    {
-        console.log("hahahaha");
-        console.log(dq);
-        console.log(zg);
-        if(dq<zg)
-        {
-            jsona["pageNum"] =  dq+1;
-        }else {
-            jsona["pageNum"] =  zg;
-        }
-    }
-    else if(id=="wei")
-    {
-        jsona["pageNum"] =  zg;
-    }
-    console.log(jsona["pageNum"]);
-
-    console.log(jsona);
-
-
-
+    jsona["apartmentId"] =apartmentId;
+    jsona["floor"] =floor;
     $.ajax({
-        url: 'otherMessage',
+        url: 'getRoomsNum',
         type: 'GET',
         data:jsona,
         dataType: 'json',
         async: true,
         success:function(data){
             console.log(data);
-            var pageHelperMessage = data["pageHelperMessage"];
-            $("#page").empty();
-            var txt2 ="当前"+pageHelperMessage["pageNum"]+"页，总共"+pageHelperMessage["pages"]+"页，共"+pageHelperMessage["total"]+"条记录";
-            $("#page").append(txt2);
-            var administratorList=data["administratorList"];
-            txt1="";
-            for(var key in administratorList)
-            {
-                var show=administratorList[key];
-                console.log(show);
-                console.log(show[4]);
-                txt1=txt1+"<tr>\n" +
-                    "                <td class=\"dx\"><input readonly=\"value\"  style=\"background:#CCCCCC;\"  class=\"kp\" value=\""+show["adminAccount"]+"\" ></input></td>\n" +
-                    "                <td class=\"dx\"><input readonly=\"value\"   class=\"kp\" style=\"background:#CCCCCC;\"  value=\""+show["adminPassword"]+"\"></td>\n" +
-                    "                <td class=\"dx\"><input readonly=\"value\"   class=\"kp\" style=\"background:#CCCCCC;\"  value=\""+show["adminName"]+"\"></td>\n" +
-                    "                <td class=\"dx\"><input readonly=\"value\"  style=\"background:#CCCCCC;\"   class=\"kp\"value=\""+show["adminPermission"]+"\" ></td>\n" +
-                    "                <td class=\"dx\"><button id=\""+show["adminId"]+"\" class=\"qrxg\">删除</button></td>\n" +
-                    "            </tr>";
-
+            var txt ="";
+            for(var key in data) {
+                var room=data[key];
+                console.log(key["rNum"])
+                if(room["rResidentNum"]==0) {
+                    txt = txt + "<div id=\"tcfj" + room["rId"] + "\" class=\" zsfjdiv\">\n" +
+                        "                <div class=\"right_room_number1\">\n" +
+                        "                    <div class=\"fh\">"+ room["rNum"]+"</div><div  class=\"finger right1 iconfont scfj fjscjh\" onclick=\"delectRoom('tcfj" + room["rId"] + "')\">&#xe613;</div>\n" +
+                        "                </div>\n" +
+                        "            </div>\n"
+                }
+                else if(room["rResidentNum"]!=0){
+                    txt = txt + "    <div id='tcfj" + room["rId"] +"' class=\" zsfjdiv1\">\n" +
+                        "                <div class=\"right_room_number1\">\n" +
+                        "                    <div class=\"fh1\">"+ room["rNum"]+"</div>\n" +
+                        "                </div>\n" +
+                        "            </div>\n"
+                }
             }
-            $("#neirong2").empty();
-            $("#neirong2").append(txt1);
+            txt=txt+"            <div id=\"zjfj\" class=\" zsfjdiv finger\">\n" +
+                "                <div  class=\"right_room_number1\">\n" +
+                "                    <div class=\"finger left iconfont zjfjbj size jh\">&#xe626;</div> <div class=\"fh1 zjfj\">增加房间</div>\n" +
+                "                </div>\n" +
+                "            </div>"
+            $("#zjfjDiv").empty();
+            $("#zjfjDiv").append(txt);
 
-            var text3="<input id=\"dq\" type=\"hidden\" value=\""+pageHelperMessage["pageNum"]+"\">\n" +
-                "                                        <input id=\"zg\" type=\"hidden\" value=\""+pageHelperMessage["pages"]+"\">";
-            $("#jihao").empty();
-            $("#jihao").append(text3);
+            $("#gyId").empty();
+            $("#gyId").append(apartmentId);
+
+            $("#floor").empty();
+            $("#floor").append(floor);
+            zsfjpopBox();
         },
         function(){
             console.log("错误");
@@ -159,15 +67,69 @@ function getOtherMessage(id) {
     });
 }
 
-//修改本人信息
-function updateMyMessage(){
-    var myPassword0=$.trim($('#myPassword').val());
-    var myName0=$.trim($('#myName').val());
+//新增房间同时关闭弹窗
+function addroom(){
+    var btns = $('.xzfjbj1').map(function(){return $(this).val();})
+    console.log("新增房间号="+btns.toArray());
+    if(btns.toArray()=="")
+    {
+        alert("没有任何修改");
+        console.log("新增房间号1");
+        zsfjcloseBox();
+        return 0;
+    }
     var jsona = {};
-    jsona["password"] =  myPassword0;
-    jsona["newName"] =  myName0;
+    jsona["rooms"] =btns.toArray();//数组化
+    jsona["apartmentId"] =$.trim($('#gyId').text());
+    jsona["floor"] =$.trim($('#floor').text());
+    console.log("rooms="+jsona["rooms"]);
+    console.log("apartmentId="+jsona["apartmentId"]);
+    console.log("floor="+jsona["floor"]);
     $.ajax({
-        url: 'updateMyMessage',
+        url: 'addRoomsNum',
+        type: 'POST',
+        traditional: true,
+        data:jsona,
+        dataType: 'json',
+        async: true,
+        success:function(data){
+            console.log(data);
+            if(data["result"]==1)
+            {
+            alert(data["message"]);
+                window.location.replace("./index");
+            }else if(data["result"]==2)
+            {
+                var err="";
+                for(var key in data["repetitionRooms"])
+                {
+                    console.log(data["repetitionRooms"][key]);
+                    err=err+data["repetitionRooms"][key]["rNum"]+",";
+                }
+                err=err.substring(0,err.length-1);
+
+                alert(err+"号房间以存在")
+            }
+            else if(data["result"]==3)
+            {
+                alert(data["message"]);
+            }
+
+        },
+        function(){
+            console.log("错误");
+        }
+    });
+}
+
+//删除房间
+function delectRoom(roomId){
+    var id=roomId.substring(4);
+    console.log("roomId="+id);
+    var jsona = {};
+    jsona["roomId"] =id;
+    $.ajax({
+        url: 'deleteRoom',
         type: 'GET',
         data:jsona,
         dataType: 'json',
@@ -175,67 +137,37 @@ function updateMyMessage(){
         success:function(data){
             console.log(data);
             alert(data["message"])
-            var content=data["content"];
-            var myAccount=content["adminAccount"];
-            var myPassword=content["adminPassword"];
-            var myName=content["adminName"];
-            var myPermission=content["adminPermission"];
-            $('#myAccount').val(myAccount);
-            $('#myPassword').val(myPassword);
-            $('#myName').val(myName);
-            $('#myPermission').val(myPermission);
+            if(data["result"]==0)
+            {
+                fjscjh(roomId);
+            }
+
+            //console.log(dq);
+
         },
         function(){
             console.log("错误");
         }
     });
 }
+
 $(function() {
-    //获取本人信息
-    getmyMessage()
-    //获取其他管理员信息
-    getOtherMessage("shouye")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     var n=1;
-    //弹出
-    $(document).on("click",".xiugai",function(){
-        var name =$(this).prev().text();
-
-        console.log(name);
-        $("#name1").val(name);
-        popBox();
-    })
-    //删除楼
-    $(document).on("click",".xiugai",function(){
-        //删除楼层ajax，记得检测有不有人住
-    })
 
     //添加房间弹窗
     $(document).on("click","#zjfj",function(){
         console.log("添加房间")
         var h="fjcj"+n;
+        var i="gb"+n;
         var txt="<div class=\"left zjfjk\" id='"+h+"'>\n" +
             "                <div class=\"right1 iconfont zjfjkgb finger\" onclick=\"fjscjh('"+h+"')\">&#xe613;</div>\n" +
             "                <div class=\"zjfjk2\">\n" +
-            "                    <input class=\"zjfjk3\" placeholder=\"输入房号\" name=\"houseelementname\">\n" +
+            "                    <input id=\""+i+"\" class=\"zjfjk3 xzfjbj1\" placeholder=\"输入房号\" name=\"houseelementname\">\n" +
             "                </div>\n" +
             "\n" +
             "            </div>"
         $(this).before(txt)
+        $("#"+i+"").focus()
         n++;
 
     })

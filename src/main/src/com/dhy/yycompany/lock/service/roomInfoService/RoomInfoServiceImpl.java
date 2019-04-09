@@ -1,5 +1,7 @@
 package com.dhy.yycompany.lock.service.roomInfoService;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.dhy.yycompany.lock.bean.*;
 import com.dhy.yycompany.lock.dao.*;
 import com.dhy.yycompany.lock.utils.AllChange;
@@ -10,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -33,6 +32,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
         RoomXExample roomXExample = new RoomXExample();
         RoomXExample.Criteria criteria = roomXExample.createCriteria();
         criteria.andRIdEqualTo(roomId);
+        criteria.andRDeleteNotEqualTo(1);
         List<RoomX> roomXES = roomXMapper.selectByExample(roomXExample);
         RoomX roomX =null;
         if(roomXES.size()==1) {
@@ -53,7 +53,9 @@ public class RoomInfoServiceImpl implements RoomInfoService {
         UserInfoExample userInfoExample=new UserInfoExample();
         UserInfoExample.Criteria criteria1=userInfoExample.createCriteria();
         criteria1.andURoomIdEqualTo(roomId);
+        criteria1.andUDeleteNotEqualTo(1);
         UserInfoMapper userInfoMapper=sqlSession.getMapper(UserInfoMapper.class);
+        userInfoExample.setOrderByClause("u_delete asc,u_primary_user desc");
         List<UserInfo> userInfoList = userInfoMapper.selectByExample(userInfoExample);
         AllChange.changeSex(userInfoList);
         System.out.println("-----------------------");
@@ -137,14 +139,14 @@ public class RoomInfoServiceImpl implements RoomInfoService {
     }
 
     @Override
-    public void deleteRoom(int roomID) {
+    public Map<String, Object> deleteRoom(int roomID) {
         RoomExample roomExample = new RoomExample();
         RoomExample.Criteria criteria = roomExample.createCriteria();
         criteria.andRIdEqualTo(roomID);
         SqlSession sqlSession = sqlSessionFactory.openSession();
         RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
         List<Room> roomList = roomMapper.selectByExample(roomExample);
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         if (roomList.get(0).getrResidentNum() == 0) {
             //没有住户，可以删除房间
             Room room = new Room();
@@ -152,47 +154,147 @@ public class RoomInfoServiceImpl implements RoomInfoService {
             room.setrDelete(1);
             int num = roomMapper.updateByPrimaryKeySelective(room);
             if (num == 1) {
-                map.put("result", "0");
+                map.put("result", 0);
                 map.put("message", "删除房间成功");
             }
         } else {
             //存在用户，不能删除房间
-            map.put("result", "1");
+            map.put("result", 1);
             map.put("message", "房间存在用户，不能删除");
         }
         System.out.println(map);
+        return map;
     }
 
     @Override
-    public Map<String, String> addRoom(String apartmentID, String roomNum) {
+    public Map<String, Object> addRoom(int apartmentID,int floor, String[] roomNums) {
         RoomExample roomExample = new RoomExample();
         RoomExample.Criteria criteria = roomExample.createCriteria();
-        criteria.andRNumEqualTo(roomNum)
-                .andRApartmentIdEqualTo(Integer.valueOf(apartmentID));
+        List<String> list = Arrays.asList(roomNums);
+        criteria.andRNumIn(list);
+        criteria.andRDeleteEqualTo(0);
+        criteria.andRApartmentIdEqualTo(apartmentID);
         SqlSession sqlSession = sqlSessionFactory.openSession();
         RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
         List<Room> roomList = roomMapper.selectByExample(roomExample);
-        Map<String, String> map = new HashMap<>();
-        if (roomList != null && roomList.size() != 0) {
+        JSON  toJSON= (JSON) JSONArray.toJSON(roomList); // List转json
+        Map<String, Object> map = new HashMap<>();
+        if (roomList.size() != 0) {
             //该房间号存在
-            map.put("result", "1");
+            map.put("result", 2);
             map.put("message", "房间已经存在");
+            map.put("repetitionRooms",toJSON);//重复房间
         } else {
             //房间号不存在
             Room room = new Room();
-            String uuid = UUID.randomUUID()
-                    .toString().replaceAll("-", "");
-            room.setrUuid(uuid);
-            room.setrApartmentId(Integer.valueOf(apartmentID));
-            room.setrFloor(roomNum.charAt(0) - '0');
-            room.setrNum(roomNum);
-            room.setrPrice(0);
-            room.setrResidentNum(0);
-            room.setrLockId(0);
-            room.setrDelete(0);
-            room.setrModify(0);
-            map.put("result", "0");
+            int i1 =1;
+            for(int i=0;i<list.size();i++) {
+                String roomNum = list.get(i);
+                String uuid = UUID.randomUUID()
+                        .toString().replaceAll("-", "");
+                room.setrUuid(uuid);
+                room.setrApartmentId(apartmentID);
+                room.setrFloor(floor);
+                room.setrNum(roomNum);
+                room.setrPrice(1000);
+                room.setrResidentNum(0);
+                room.setrDelete(0);
+                room.setrModify(0);
+                i1 = roomMapper.insertSelective(room);
+                if(i1==0)
+                {
+                    break;
+                }
+            }
+            if(i1==0)
+            {
+                map.put("result", 3);
+                map.put("message", "添加房间失败");
+            }
+            map.put("result", 1);
             map.put("message", "添加房间成功");
+        }
+        return map;
+    }
+
+    @Override
+    public JSON getRoomsNum(int apartmentID, int floor) {
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        RoomExample roomExample=new RoomExample();
+        RoomExample.Criteria criteria=roomExample.createCriteria();
+        criteria.andRApartmentIdEqualTo(apartmentID).andRFloorEqualTo(floor);
+        criteria.andRDeleteEqualTo(0);
+        criteria.andRNumNotEqualTo("-1");
+        RoomMapper roomMapper=sqlSession.getMapper(RoomMapper.class);
+        List<Room> rooms=roomMapper.selectByExample(roomExample);
+        Collections.sort(rooms, new Comparator<Room>() {
+            @Override
+            public int compare(Room o1, Room o2) {
+                // TODO Auto-generated method stub
+                if (o1.getrNumInt() < o2.getrNumInt()) {
+                    return -1;
+                }
+                if (o1.getrNumInt() == o2.getrNumInt())
+                    return 0;
+                return 1;
+            }
+        });
+
+        JSON  toJSON= (JSON) JSONArray.toJSON(rooms);
+        System.out.println("json="+toJSON);
+        return toJSON;
+    }
+
+    public Map<String, Object> deleteFloor(int apartmentID, int floor){
+        Map<String, Object> map = new HashMap<>();
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
+        RoomExample roomExample=new RoomExample();
+        RoomExample.Criteria criteria = roomExample.createCriteria();
+        criteria.andRApartmentIdEqualTo(apartmentID);
+        criteria.andRFloorEqualTo(floor);
+        RoomExample roomExample1=new RoomExample();
+        RoomExample.Criteria criteria1 = roomExample1.createCriteria();
+        criteria1.andRApartmentIdEqualTo(apartmentID);
+        criteria1.andRFloorEqualTo(floor);
+        criteria1.andRResidentNumNotEqualTo(0);
+        List<Room> rooms = roomMapper.selectByExample(roomExample);
+        if(rooms.size()!=0)
+        {
+            map.put("result",2);
+            map.put("message", "操作失败,该楼层房间有人住或预定了,不能进行删除操作!");
+        }
+
+        Room room = new Room();
+        room.setrDelete(1);
+        int i = roomMapper.updateByExampleSelective(room, roomExample);
+        System.out.println(i);
+        if(i==0)
+        {
+            map.put("result", 1);
+            map.put("message", "操作成功,删除楼层失败");
+        }else {
+            map.put("result", 0);
+            map.put("message", "操作成功，删除楼层成功");
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String,Object> modifyPrice(int roomID,int price) {
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        RoomMapper roomMapper=sqlSession.getMapper(RoomMapper.class);
+        Room room=new Room();
+        room.setrId(roomID);
+        room.setrPrice(price);
+        int num=roomMapper.updateByPrimaryKeySelective(room);
+        Map<String, Object> map = new HashMap<>();
+        if(num==1){
+            map.put("result", 0);
+            map.put("message", "修改租金成功");
+        }else{
+            map.put("result", 1);
+            map.put("message", "修改租金失败");
         }
         return map;
     }

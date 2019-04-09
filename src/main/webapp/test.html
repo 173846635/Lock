@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>hide_or_show.html</title>
+
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="css/test.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        </head>
+
+        <body>
+        <span class="left1">关</span>
+        <div class="div1 left1 open1">
+
+            <span class="left"></span>
+            <span class="right"></span>
+
+            <div class="div2 open2"></div>
+        </div>
+        <span class="left1">开</span>
+        </body>
+
+<script>
+    $(function(){
+        $(".div2").on('click',function() {
+            console.log('className======='+$(this).prop("className"))
+            $(this).parent().toggleClass('close1');
+            $(this).parent().toggleClass('open1');
+            $(this).toggleClass('close2');
+            $(this).toggleClass('open2');
+        })
+    });
+</script>
+        </html>

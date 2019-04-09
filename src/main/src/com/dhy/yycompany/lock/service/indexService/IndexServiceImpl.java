@@ -81,11 +81,12 @@ public class IndexServiceImpl implements IndexService {
                 for (int i = 0; i < roomList.size(); i++) {
                     //判断是否是一个公寓的房间
                     if (apartment_id == roomList.get(i).getrApartmentId()) {
-                        if (roomList.get(i).getrResidentNum() == 0) {
+                        if (roomList.get(i).getrResidentNum() == 0&&!roomList.get(i).getrNum().equals("-1")) {
                             emptyRooms++;
                         }
                         //把一层楼的房间放到一个list里，存入mapFloor中
                         if (rFloor == roomList.get(i).getrFloor()) {
+                            System.out.println("rNum="+roomList.get(i).getrNum());
                             //把房间加入楼层list
                             sameFloorRooms.add(roomList.get(i));
                         } else {

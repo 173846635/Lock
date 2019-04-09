@@ -1,6 +1,7 @@
 package com.dhy.yycompany.lock.service.AdminService;
 
 import com.alibaba.fastjson.JSON;
+import com.dhy.yycompany.lock.bean.Administrator;
 
 import java.util.Map;
 
@@ -15,6 +16,8 @@ public interface AdministratorService {
     //获取所有管理员信息
     JSON getInfos(int adminID, int pageNum);
     //删除管理员
-    Map<String,String> deleteAdmin(int adminID);
+    Map<String,Object> deleteAdmin(int adminID);
+    //新增管理员
+    Map<String,Object> addInfo(Administrator administrator);
 
 }

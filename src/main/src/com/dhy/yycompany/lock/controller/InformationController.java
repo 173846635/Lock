@@ -1,13 +1,18 @@
 package com.dhy.yycompany.lock.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dhy.yycompany.lock.bean.Room;
 import com.dhy.yycompany.lock.bean.RoomX;
+import com.dhy.yycompany.lock.service.UserService.UserService;
 import com.dhy.yycompany.lock.service.roomInfoService.RoomInfoService;
+import com.dhy.yycompany.lock.service.roomInfoService.RoomInfoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
 
@@ -17,6 +22,9 @@ public class InformationController {
 
     @Autowired
     RoomInfoService roomInfoServiceImpl;
+
+    @Autowired
+    UserService userServiceImpl;
 
     /**
      * 进入以居住房间页面
@@ -33,15 +41,60 @@ public class InformationController {
         RoomX roomX = (RoomX) roomInfo.get("roomX");
         int onOff = roomX.getOnOff();
         System.out.println("onOff:"+onOff);
-        String kg=null;
-        if(onOff==1)
-        {
-            kg="checked";
-        }
+        System.out.println("--------------");
+        System.out.println("-----"+onOff+"------");
+        System.out.println("--------------");
+        System.out.println("users="+roomInfo.get("users").toString());
         mod.addAttribute("roomX",roomInfo.get("roomX"));//房间信息
         mod.addAttribute("users",roomInfo.get("users"));//用户信息
-        mod.addAttribute("onOff",kg);//门锁开关
+        mod.addAttribute("onOff",onOff);//门锁开关
         return "information.jsp";
 
     }
+
+    //删除楼层
+    @RequestMapping(value = {"quit"})
+    @ResponseBody
+    public JSON quit(@RequestParam("roomId") int roomId,@RequestParam("userId")int userId)
+    {
+        Map<String, Object> stringObjectMap = userServiceImpl.deleteUser(roomId, userId);
+        JSON jsonObject = new JSONObject(stringObjectMap);
+        System.out.println("jsonObject="+jsonObject);
+        return jsonObject;
+    }
+
+    //修改租金
+    @RequestMapping("changeRent")
+    @ResponseBody
+    public JSON changeRent(@RequestParam("roomId") int roomId,@RequestParam("price")int price)
+    {
+        Map<String, Object> stringStringMap = roomInfoServiceImpl.modifyPrice(roomId, price);
+        JSON jsonObject = new JSONObject(stringStringMap);
+        System.out.println("jsonObject="+jsonObject);
+        return jsonObject;
+    }
+
+    //退房
+    @RequestMapping("checkOut")
+    @ResponseBody
+    public JSON checkOut(@RequestParam("roomId") int roomId)
+    {
+        Map<String, Object> stringObjectMap = userServiceImpl.deleteAllUsers(roomId);
+        JSON jsonObject = new JSONObject(stringObjectMap);
+        System.out.println("jsonObject="+jsonObject);
+        return jsonObject;
+    }
+
+    //开门
+    @RequestMapping("open")
+    @ResponseBody
+    public JSON open(@RequestParam("roomId") int roomId)
+    {
+        Map<String, Object> stringObjectMap = userServiceImpl.deleteAllUsers(roomId);
+        JSON jsonObject = new JSONObject(stringObjectMap);
+        System.out.println("jsonObject="+jsonObject);
+        return jsonObject;
+    }
+
+
 }

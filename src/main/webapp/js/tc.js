@@ -1,5 +1,6 @@
 /*点击弹出按钮*/
 function glypopBox() {
+    console.log("弹出管理管理员")
     var popBox = document.getElementById("glygl");
     var popLayer1 = document.getElementById("popLayer1");
     popLayer1.style.display = "block";
@@ -10,6 +11,7 @@ function glypopBox() {
 
 /*点击关闭按钮*/
 function glycloseBox() {
+    console.log("关闭管理管理员")
     var popBox = document.getElementById("glygl");
     var popLayer1 = document.getElementById("popLayer1");
     popBox.style.display = "none";
@@ -19,6 +21,7 @@ function glycloseBox() {
 
 /*点击弹出增删房间*/
 function zsfjpopBox() {
+    console.log("弹出增删房间页面")
     var zsfjtc = document.getElementById("zsfjtc");
     var popLayer2 = document.getElementById("popLayer2");
     popLayer2.style.display = "block";
@@ -29,6 +32,8 @@ function zsfjpopBox() {
 
 /*点击关闭增删房间*/
 function zsfjcloseBox() {
+    // zjfjk3
+    console.log("关闭增删房间页面")
     var zsfjtc = document.getElementById("zsfjtc");
     var popLayer2 = document.getElementById("popLayer2");
     zsfjtc.style.display = "none";
@@ -83,14 +88,64 @@ function xjglycloseBox() {
     glypopBox();
 }
 
+
+/*点击弹出确认删除界面*/
+function querengpopBox( userId) {
+    var txt="";
+    txt=txt+userId;
+    $("#scduserId").empty();
+    $("#scduserId").append(txt);
+    console.log("弹出确认删除界面")
+    var querengBox = document.getElementById("querengBox");
+    var popLayer2 = document.getElementById("popLayer2");
+    popLayer2.style.display = "block";
+    querengBox.style.display = "block";
+
+
+};
+
+/*点击关闭删除界面*/
+function querengcloseBox() {
+    console.log("关闭删除界面")
+    var querengBox = document.getElementById("querengBox");
+    var popLayer2 = document.getElementById("popLayer2");
+    querengBox.style.display = "none";
+    popLayer2.style.display = "none";
+}
+
+
+/*点击弹出确认退房界面*/
+function tfpopBox( roomId) {
+    var txt="";
+    txt=txt+roomId;
+    $("#tfRoomId").empty();
+    $("#tfRoomId").append(txt);
+    console.log("弹出确认退房界面")
+    var tfcloseBox = document.getElementById("tfcloseBox");
+    var popLayer2 = document.getElementById("popLayer2");
+    popLayer2.style.display = "block";
+    tfcloseBox.style.display = "block";
+
+
+};
+
+/*点击关闭确认退房界面*/
+function tfcloseBox() {
+    console.log("关闭确认退房界面")
+    var tfcloseBox = document.getElementById("tfcloseBox");
+    var popLayer2 = document.getElementById("popLayer2");
+    tfcloseBox.style.display = "none";
+    popLayer2.style.display = "none";
+}
+
 $(function() {
 
-    //新建密码
-    $(document).on("click",".gb",function() {
-
-        //ajax
-
-        closeBox();
-    })
+    // //新建门锁密码
+    // $(document).on("click",".gb",function() {
+    //
+    //     //ajax
+    //
+    //     closeBox();
+    // })
 
 })

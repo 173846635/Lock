@@ -1,14 +1,5 @@
-.xin{
-    font-size: 2px;
-    margin-top: 1%;
-    margin-bottom: 0%;
-    color: #7e7e7e;
-    cursor:pointer;
-    margin-left: 2px;
-}
-.lNumber{
-    margin-right:10%;
-}
+
+
 
 .tm{
     background-color: #F50E4C;
@@ -18,33 +9,14 @@
 
 
 
-.toubt{
-    color:#000000;
-    text-align:center;
-    height: 20px;
-}
 
-.xx{
-    width: 70%;
-}
-.jz{
-    width: 100%;
 
-    margin:5px auto 0;
-}
-.xm{
-    cursor:pointer;
 
-}
-.mmxg{
 
-    float: left;
-}
 
-.tc{
-    float: right;
-    margin-right: 10px;
-}
+
+
+
 .xq{
     cursor:pointer;
     background-color: #7e7e7e;
@@ -55,17 +27,7 @@
     margin-right: 10px;
     margin-top: 30px;
 }
-.xq22{
-    cursor:pointer;
-    background-color: #7e7e7e;
-    border-radius:5px 5px;
-    text-align:center;
-    float: right;
-    width: 50px;
-    margin-right: 10px;
-    margin-top: 30px;
-    color: #f0f8ff;
-}
+
 .xq1{
     cursor:pointer;
     background-color: #7e7e7e;
@@ -76,15 +38,9 @@
     margin-right: 10px;
 }
 
-.left{
-    float: left;
-}
 
-.wk{
-    height: 50px;
-    margin-top: 10px;
-    margin-bottom: 18px;
-}
+
+
 .bt{
     margin-bottom: 5px;
     text-align:center;
@@ -205,20 +161,6 @@
     display: flex;
 
 }
-.zjfjk3{
-    margin-top: 2.5px;
-    outline:none;
-    border: 2px solid #d7d9da;
-    border-radius:5px 5px;
-
-    height: 16px;
-    width: 110px;
-}
-
-.zjfjk3:focus{
-    outline:none;
-    border: 2px solid #78d2ff;
-}
 .zjfjkgb{
     margin-top: 4px;
     margin-right: 1px;
@@ -236,10 +178,12 @@
 .myxx::after{
     clear: both;
 }
-.myxx2{
-    width: 20%;
-    font-size: 18px;
+
+
+.xgxxqr{
     text-align:center;
-    margin:0 auto;
-    margin-left: 42.5%;
+   width: 80px;
+}
+.lousc:hover{
+    color: #4FACDB;
 }

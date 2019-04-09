@@ -20,6 +20,7 @@ public class LockInfo {
     private Integer lDelete;
 
     private Integer lModify;
+    private String lStatusStr;//门锁状态Str
 
     public Integer getlId() {
         return lId;
@@ -101,6 +102,14 @@ public class LockInfo {
         this.lModify = lModify;
     }
 
+    public String getlStatusStr() {
+        return lStatusStr;
+    }
+
+    public void setlStatusStr(String lStatusStr) {
+        this.lStatusStr = lStatusStr;
+    }
+
     @Override
     public String toString() {
         return "LockInfo{" +
@@ -114,6 +123,7 @@ public class LockInfo {
                 ", lIntroduction='" + lIntroduction + '\'' +
                 ", lDelete=" + lDelete +
                 ", lModify=" + lModify +
+                ", lStatusStr='" + lStatusStr + '\'' +
                 '}';
     }
 }

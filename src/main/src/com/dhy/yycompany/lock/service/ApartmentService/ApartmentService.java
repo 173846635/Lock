@@ -8,5 +8,16 @@ public interface ApartmentService {
      * @param apartmentID
      * @return
      */
-    Map<String,String> deleteApartment(int apartmentID);
+    Map<String,Object> deleteApartment(int apartmentID);
+    Map<String,Object> updateApartment(int apartmentID, String newName);
+    Map<String,Object> updateApartmentFloorNum(int apartmentID, int num);
+
+    /**
+     * 增加楼层
+     * @param apartmentId
+     * @param floors
+     * @return
+     */
+    Map<String,Object> updateApartmentFloor(int apartmentId, String[] floors);
+
 }

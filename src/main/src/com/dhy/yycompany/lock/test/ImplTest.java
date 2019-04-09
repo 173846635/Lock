@@ -1,7 +1,9 @@
 package com.dhy.yycompany.lock.test;
 
+import com.alibaba.fastjson.JSON;
 import com.dhy.yycompany.lock.service.AdminService.AdministratorService;
 import com.dhy.yycompany.lock.service.ApartmentService.ApartmentService;
+import com.dhy.yycompany.lock.service.LockService.LockService;
 import com.dhy.yycompany.lock.service.indexService.IndexService;
 import com.dhy.yycompany.lock.service.roomInfoService.RoomInfoService;
 import com.dhy.yycompany.lock.service.testService.TestService;
@@ -10,9 +12,15 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class ImplTest {
     @Test
@@ -81,6 +89,19 @@ public class ImplTest {
     }
 
 
+    @Test
+    public void getAllKeyByLockId(){
+        ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
+        LockService lockServiceImpl = (LockService) context.getBean("lockServiceImpl");
+        JSON allKeyByLockId = lockServiceImpl.getAllKeyByLockId(2, 1);
+        System.out.println(allKeyByLockId);
+    }
+
+    @Test
+    public void load(String path) {
+
+        System.out.println(this.getClass().getResource("jdbc.properties").getPath()+'\n');
+    }
 
 
 }

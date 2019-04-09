@@ -102,8 +102,9 @@ public class AdministratorServiceImpl implements AdministratorService {
         AdministratorExample administratorExample=new AdministratorExample();
         AdministratorExample.Criteria criteria=administratorExample.createCriteria();
         criteria.andAdminIdNotEqualTo(adminID);
+        criteria.andAdminDeleteEqualTo(0);
         SqlSession sqlSession=sqlSessionFactory.openSession();
-        PageHelper.startPage(pageNum, 5);
+        PageHelper.startPage(pageNum, 8);
         AdministratorMapper administratorMapper=sqlSession.getMapper(AdministratorMapper.class);
         List<Administrator> administratorList=administratorMapper.selectByExample(administratorExample);
         System.out.println("administratorList="+administratorList);
@@ -130,7 +131,7 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public Map<String, String> deleteAdmin(int adminID) {
+    public Map<String,Object> deleteAdmin(int adminID) {
         Administrator administrator=new Administrator();
         administrator.setAdminId(adminID);
         administrator.setAdminDelete(1);
@@ -138,7 +139,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         AdministratorMapper administratorMapper=sqlSession.getMapper(AdministratorMapper.class);
         //把administrator表中的delete置1
         int num=administratorMapper.updateByPrimaryKeySelective(administrator);
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         if(num==1){
             //管理员删除成功
             KeyAndAdminExample keyAndAdminExample=new KeyAndAdminExample();
@@ -160,17 +161,59 @@ public class AdministratorServiceImpl implements AdministratorService {
                 if(num1>0){
                     //删除管理员创建的密码成功
                     System.out.println("删除管理员创建的密码成功");
-                    map.put("result", "0");
+                    map.put("result", 0);
                     map.put("message", "删除管理员成功");
                 }
+            }else if(keyAndAdminList.size()==0){
+                //管理员秘钥删除失败
+                System.out.println("无管理员创建的密码");
+                map.put("result", 0);
+                map.put("message", "删除管理员成功");
+            }else{
+                //管理员秘钥删除失败
+                System.out.println("管理员秘钥删除失败");
+                map.put("result", 2);
+                map.put("message", "删除管理员成功，但其创建的秘钥删除失败");
             }
         }else{
             //管理员删除失败
             System.out.println("管理员删除失败");
-            map.put("result", "1");
+            map.put("result", 1);
             map.put("message", "删除管理员失败");
         }
         sqlSession.close();
+        return map;
+    }
+
+    public Map<String,Object> addInfo(Administrator administrator)
+    {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        AdministratorMapper administratorMapper = sqlSession.getMapper(AdministratorMapper.class);
+        AdministratorExample administratorExample = new AdministratorExample();
+        AdministratorExample.Criteria criteria = administratorExample.createCriteria();
+        criteria.andAdminAccountEqualTo(administrator.getAdminAccount());
+        List<Administrator> administrators = administratorMapper.selectByExample(administratorExample);
+        Map<String, Object> map = new HashMap<>();
+        if(administrators.size()==0)
+        {
+            int i = administratorMapper.insertSelective(administrator);
+            if(i==1)
+            {
+                System.out.println("创建成功");
+                map.put("result", 1);
+                map.put("message", "创建成功");
+            }
+            else {
+                System.out.println("创建失败");
+                map.put("result", 3);
+                map.put("message", "创建失败");
+            }
+        }
+        else {
+            System.out.println("账号存在");
+            map.put("result", 2);
+            map.put("message", "创建失败，账号以存在");
+        }
         return map;
     }
 }

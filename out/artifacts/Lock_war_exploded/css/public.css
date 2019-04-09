@@ -1,0 +1,147 @@
+.wk{
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 18px;
+}
+
+.toubt{
+    color:#000000;
+    text-align:center;
+    height: 20px;
+}
+
+.jz{
+    width: 100%;
+
+    margin:5px auto 0;
+}
+
+.left{
+    float: left;
+}
+
+.xx{
+    width: 70%;
+}
+
+.mmxg{
+
+    float: left;
+}
+
+.xm{
+    cursor:pointer;
+
+}
+
+.tc{
+    float: right;
+    margin-right: 10px;
+}
+
+.xgltcnr{
+    background-color: #ffffff;
+
+    max-height: 80%;
+    overflow-y:scroll;
+}
+.xgltcnr1{
+
+}
+.xgltcnr a:hover{
+    background-color: #a0bdff;
+}
+.xgltcnr::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+.xgltcnr::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #535353;
+}
+.xgltcnr::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    background: #EDEDED;
+}
+.xgltcnr button{
+    position:relative;
+    padding: 0px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align:left;
+    height: 45px;
+    margin-left: 5px;/*左移*/
+    /*消除button的默认样式*/
+    border: 0;
+    background-color: transparent;
+    outline: none;    /*消除默认点击蓝色边框效果*/
+    color: #6395ff;
+}
+
+.lNumber{
+    margin-right:10%;
+}
+
+.myxx2{
+    width: 20%;
+    font-size: 18px;
+    text-align:center;
+    margin:0 auto;
+    margin-left: 42.5%;
+}
+
+.xin{
+    font-size: 2px;
+    margin-top: 1%;
+    margin-bottom: 0%;
+    color: #7e7e7e;
+    cursor:pointer;
+    margin-left: 2px;
+}
+
+.xq22{
+    cursor:pointer;
+    background-color: #7e7e7e;
+    border-radius:5px 5px;
+    text-align:center;
+    float: right;
+    width: 50px;
+    margin-right: 10px;
+    margin-top: 30px;
+    color: #f0f8ff;
+}
+
+.xq33{
+    cursor:pointer;
+    background-color: #7e7e7e;
+    border-radius:5px 5px;
+    text-align:center;
+    float: right;
+    width: 50px;
+    margin-right: 10px;
+    color: #f0f8ff;
+}
+
+.zjfjk3{
+    margin-top: 2.5px;
+    outline:none;
+    border: 2px solid #d7d9da;
+    border-radius:5px 5px;
+
+    height: 16px;
+    width: 110px;
+}
+
+.zjfjk3:focus{
+    outline:none;
+    border: 2px solid #78d2ff;
+}
+.tsbai{
+    background-color: #ffffff;
+}

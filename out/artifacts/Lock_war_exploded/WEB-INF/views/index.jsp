@@ -20,49 +20,32 @@
     <link rel="stylesheet" href="../../css/information.css">
     <link rel="stylesheet" href="../../css/tc.css">
     <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/public.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="../../js/index.js"></script>
+    <script type="text/javascript" src="../../js/public.js"></script>
     <script type="text/javascript" src="../../js/tc.js"></script>
 </head>
 
 <body >
 
-<!--头虚体-->
-<%--<div class="main_container xt">--%>
-    <%--<div class="navbar-header">--%>
-        <%--<div class="versions">--%>
-            <%--<a href="#">--%>
-                <%--gy公寓--%>
-                <%--<span>版本v0.1</span>--%>
-            <%--</a>--%>
-        <%--</div>--%>
-        <%--<div class="main_date">--%>
-            <%--<a href="#">1月27日星期日</a>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="portrait" onmousemove="popBox2()" >--%>
-        <%--<a href="#" on>--%>
-            <%--<div class="tx"><img class="tp" src="../../img/tx1.jpg"></div>--%>
 
-        <%--</a>--%>
-    <%--</div>--%>
-<%--</div>--%>
 <!--主体-->
-<div class="main_xia" style="min-height:100%;">
+<div class="mair n_xia" style="min-height:100%;">
 
     <!--房态-->
     <div class="house_status dw">
         <!--左导航实体-->
         <div class="left_navigation dw">
-            <ul class="houses">
-                <li>
-                    <a class="house"  href="#"><i class="iconfont">&#xe60f;</i><span >1号楼</span><button class="xiugai" >修改</button></a>
-                    <ul>
-                        <li class="floor"><a href="#">1楼</a></li>
-                        <li class="floor"><a href="#">2楼</a></li>
-                        <li class="floor"><a href="#">3楼</a></li>
-                    </ul>
-                </li>
+            <ul id="zbnr" class="houses">
+                <%--<li>--%>
+                    <%--<a class="house"  href="#"><i class="iconfont">&#xe60f;</i><span >1号楼</span><button class="xiugai" >修改</button></a>--%>
+                    <%--<ul>--%>
+                        <%--<li class="floor"><a href="#">1楼</a></li>--%>
+                        <%--<li class="floor"><a href="#">2楼</a></li>--%>
+                        <%--<li class="floor"><a href="#">3楼</a></li>--%>
+                    <%--</ul>--%>
+                <%--</li>--%>
 
             </ul>
         </div>
@@ -87,8 +70,9 @@
 
              %>
                 <div class="bean">
-                    <div class="right_house">
+                    <div id="mao_<%=apartmentID%>" class="right_house">
                         <span id="ygy<%=apartmentID%>" class="right_house_number"><%=apartmentName%></span>
+                        <div id="" style=" display: none;"></div>
                         <span class="right_house_number1">总空置:<%=emptyRooms%></span>
                     </div>
                     <div class="right_floors">
@@ -104,18 +88,31 @@
                             Map.Entry mapentry = (Map.Entry) iterator.next();
                             key = (String) mapentry.getKey();
                             value=(List<Room>)mapentry.getValue();
+                            if(value.get(0)==null)
+                            {
+                                value=null;
+                            }
+                            System.out.println(value);
 
                     %>
-                        <div id="l:1" class="right_floor">
+                        <div  id="mao_<%=apartmentID%>_<%=key%>" class="right_floor">
                             <div class="right_floor_z">
                                 <span><%=key%>楼</span>
                             </div>
                             <!--房间s-->
                             <div class="right_rooms">
                                 <%
+                                    if(value!=null)
+                                    {
                                 for(int z=0;z<value.size();z++)
                                 {
+
                                     Room room = value.get(z);
+                                    if(room.getrNum().equals("-1"))
+                                    {
+                                        continue;
+                                    }
+                                    System.out.println(room.toString());
                                     int id = room.getrId();//房id
                                     String roomNum = room.getrNum();//房号
 
@@ -137,7 +134,7 @@
                                 <%}else{
                                 %>
                                     <a href="open?roomId=<%=id%>">
-                                        <button class="finger right_room">
+                                        <button class="finger finger right_room">
                                             <div class="right_room_number">
                                                 <span><%=roomNum%></span>
                                             </div>
@@ -149,8 +146,9 @@
                                 <%
                                         }
                                     }
+                                    }
                                 %>
-                                <button class="right_room" onclick="zsfjpopBox()">
+                                <button id="<%=apartmentID%>_<%=key%>" class="finger right_room" onclick="getRoomsNum(this.id)">
                                     <div class="right_room_number">
                                         <span style=" font-size: 10px;">增删房间</span>
                                     </div>
@@ -230,30 +228,34 @@
 
             </div>
             <HR align=center width=100% color=#ccc SIZE=2>
-            <div  class="gb"><div  class="xm mmxg" onclick="glypopBox()">管理员管理</div><div class="xm tc">退出</div></div>
+            <div  ><div  class="xm mmxg" onclick="glypopBox()">管理员管理</div><div class="xm tc">退出</div></div>
 
         </div>
 
     </div>
 </div>
-
-
-
 <!--修改楼弹窗-->
 <div id="popLayer"></div>
-<div id="popBox" class="popBox ke">
+<div id="popBox" style="height: 400px; width: 500px;" class="popBox ke">
     <div class="close">
-        <a  href="javascript:void(0)" onclick="closeBox()" class="gb iconfont">&#xe613;</a>
+        <a  href="javascript:void(0)" onclick="closeBox()" class="iconfont">&#xe613;</a>
     </div>
-    <div class="content">
+    <div  style="width: auto;" class="xgltcnr ke">
+    <div class="xgltcnr1 content">
         <h4>修改信息</h4>
-        <div ><label>楼名：</label><input  id="name1" class="form-control" type="text" value=""><span id="sclc" class="xin">删除</span></div>
         <br/>
-        <div class="lNumber"><label>楼层数：</label><input  id="number" class="form-control" type="text" value=""></div>
+        <br/>
+        <br/>
+        <div ><label style="font-size: 15px; font-weight:bold ">楼&nbsp;&nbsp;&nbsp;名：</label><input    id="111" class="name1 form-control zjfjk3" type="text" value=""><span id="sclc" class="scSpan xin lousc" onclick="deleteApartment(this.id)">删除</span></div>
+        <br/>
+        <div id="floor_div" style="width: 210px; text-align:center; margin:0 auto;" class="lNumber">
+
+        </div>
 
     </div>
-    <div onclick="closeBox()" class="gb"><div id="b1" class="bd xyb finger">确认</div></div>
-
+    <div style="text-align:center; margin:20px auto 0 auto;"><div onclick="addfloorQ()"   style="width: 80px; text-align:center; margin:0 auto; " class="bd finger">添加楼层</div></div>
+    </div>
+    <div onclick="updateApartmentNameAndFloor()" style="text-align:center; margin:20px auto 0 auto;" class="gb"><div id="b2" style="width: 80px; text-align:center; margin:0 auto;" class="bd xyb finger">确认</div></div>
 </div>
 
 <!--管理管理员弹窗-->
@@ -261,7 +263,7 @@
 <div id="popLayer1"></div>
 <div id="glygl" class="popBox ke">
     <div class="close">
-        <a  href="javascript:void(0)" onclick="closeBox()" class="gb iconfont">&#xe613;</a>
+        <a  href="javascript:void(0)" onclick="glycloseBox()" class="iconfont">&#xe613;</a>
     </div>
     <div class="myxx"><div class="myxx2">我的信息</div></div>
     <div class="content">
@@ -312,7 +314,6 @@
                     <li><a class="shang" id="shang" onclick="getOtherMessage(this.id)">上一页</a></li>
                     <li><a class="xia" id="xia" onclick="getOtherMessage(this.id)">下一页</a></li>
                     <li><a class="wei" id="wei" onclick="getOtherMessage(this.id)">尾&nbsp;&nbsp;&nbsp;&nbsp;页</a></li>
-
                 </ul>
 
             </nav>
@@ -321,9 +322,9 @@
         </div>
 
     </div>
-    <div  class="gb">
-        <div onclick="glycloseBox()" id="b0" class="xq22">提交</div>
-        <div onclick="glycloseBox()" id="b2" class="xq22">取消</div>
+    <div  >
+        <div onclick="glycloseBox()" id="b0" class="xq22">确认</div>
+        <%--<div onclick="glycloseBox()" id="b2" class="xq22">取消</div>--%>
     </div>
 
 </div>
@@ -334,163 +335,49 @@
 <div id="xjglypopBox" class="popBox ke">
     <!--新建管理员弹窗1-->
     <div class="close">
-        <a  href="javascript:void(0)" onclick="xjglycloseBox()" class="gb iconfont">&#xe613;</a>
+        <a  href="javascript:void(0)" onclick="xjglycloseBox()" class="iconfont">&#xe613;</a>
     </div>
     <div class="content">
         <h4>新建管理员</h4>
-        <div ><label>账号：</label><input  id="name2" class="form-control" type="text" value=""></div>
         <br/>
-        <div ><label>密码：</label><input  id="password2" class="form-control" type="text" value=""></div>
+
+        <div style="text-align:center; ">
+            <label style="text-align:center;">
+                <input  style="position:absolute; width: 60px;height: 60px; opacity:0; text-align:center; cursor: pointer;" type="file" name="file" id="Album_img" accept="image/gif,image/jpeg,image/x-png"/>
+                <img  style="display: inline; width: 60px;height: 60px; text-align:center;" src="../../img/head.jpg">
+            </label>
+        </div>
+        <br/>
+        <div ><label>账号：</label><input  id="account2" class="form-control" type="text" value=""></div>
+        <br/>
+        <div ><label>密码：</label><input   id="password2" class="form-control" type="password" value=""></div>
+        <br/>
+        <div ><label>权限：</label>
+            <label class="permission2"><input type="radio" name="permission" value="2" />2级权限</label>
+            <label class="permission2"><input type="radio" name="permission" value="3" />3级权限</label>
+            <label class="permission2"><input type="radio" name="permission" value="4" />4级权限</label>
+        </div>
+        <br/>
+        <div ><label>姓名：</label><input  id="name2" class="form-control" type="text" value=""></div>
+        <br/>
     </div>
-    <div onclick="xjglycloseBox()" class="gb"><div id="b22" class="bd xyb finger">确认</div></div>
+    <div onclick="addMyMessage()" class="gb"><div id="b22" class="bd xyb finger">确认</div></div>
 
 </div>
 
 <!--增删房间弹窗-->
-<div id="popLayer2"></div>
+<div id="popLayer3"></div>
 <div id="zsfjtc" class="popBox ke">
+    <div id="gyId"  style="display: none;"></div>
+    <div id="floor" style="display: none;"></div>
     <div class="close">
-        <a  href="javascript:void(0)" onclick="closeBox()" class="gb iconfont">&#xe613;</a>
+        <a  href="javascript:void(0)" onclick="zsfjcloseBox()" class="iconfont">&#xe613;</a>
     </div>
     <div  class="wj">
         <div class="bt"><h4>修改信息</h4></div>
         <HR align=center width=100% color=#ccc SIZE=2>
-        <div class="nr1">
-            <div id="tcfj1" class=" zsfjdiv">
-            <div class="right_room_number1">
-                <div class="fh">101</div><div  class="finger right1 iconfont scfj fjscjh" onclick="fjscjh('tcfj1')">&#xe613;</div>
-            </div>
-            </div>
-            <div id="tcfj2" class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">102</div><div class="finger right1 iconfont scfj fjscjh" onclick="fjscjh(tcfj2)">&#xe613;</div>
-                </div>
-            </div>
-            <div id="tcfj3" class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh" onclick="fjscjh(tcfj3)">&#xe613;</div>
-                </div>
-            </div>
-            <div id="tcfj4" class="zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv1">
-                <div class="right_room_number1">
-                    <div class="fh1">101</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class="zsfjdiv1">
-                <div class="right_room_number1">
-                    <div class="fh1 mx">101</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div class=" zsfjdiv">
-                <div class="right_room_number1">
-                    <div class="fh">101</div><div class="finger right1 iconfont scfj fjscjh">&#xe613;</div>
-                </div>
-            </div>
-            <div id="zjfj" class=" zsfjdiv finger">
-                <div  class="right_room_number1">
-                    <div class="finger left iconfont zjfjbj size jh">&#xe626;</div> <div class="fh1 zjfj">增加房间</div>
-                </div>
-            </div>
+        <div id="zjfjDiv" class="nr1">
+
         </div>
 
     </div>
@@ -499,7 +386,7 @@
     <HR align=center width=100% color=#ccc SIZE=2>
         </div>
         <div>
-            <div onclick="zsfjcloseBox()" class="gb"><div  class="right1 xq22">提交</div><div  class="right1 xq22">取消</div></div>
+            <div ><div onclick="addroom()"  class="right1 xq22">提交</div><div onclick="zsfjcloseBox()"  class="right1 xq22">取消</div></div>
         </div>
     </div>
 

@@ -1,5 +1,6 @@
 package com.dhy.yycompany.lock.service.roomInfoService;
 
+import com.alibaba.fastjson.JSON;
 import com.dhy.yycompany.lock.bean.Room;
 
 import java.util.Map;
@@ -53,12 +54,33 @@ public interface RoomInfoService {
      * 删除单个房间
      * @param roomID
      */
-    void deleteRoom(int roomID);
+    Map<String, Object> deleteRoom(int roomID);
 
 
     /**
-     * 增加单个房间
-     * 提供房间号创建房间
+     * 增加房间
+     * 提供房间号创建房间名
      */
-    public Map<String, String> addRoom(String apartmentID, String roomNum);
+    public Map<String, Object> addRoom(int apartmentID, int floor,String[] roomNum);
+
+    /**
+     * 增删房间界面，获得楼层中所有房间的信息，参数 （公寓楼id， 楼层）
+     * @param apartmentID
+     * @param floor
+     * @return
+     */
+    JSON getRoomsNum(int apartmentID, int floor);
+
+    /**
+     * 删除楼层
+     * @param apartmentID
+     * @param floor
+     * @return
+     */
+    public Map<String, Object> deleteFloor(int apartmentID, int floor);
+
+    /**
+     *修改房间租金
+     */
+    Map<String,Object> modifyPrice(int roomID,int price);
 }
