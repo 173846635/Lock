@@ -45,7 +45,7 @@ public class ImplTest {
     public void getRoomInfo(){
         ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
         RoomInfoService roomInfoService = (RoomInfoService) context.getBean("roomInfoServiceImpl");
-        Map<String,Object> map=roomInfoService.getRoomInfo(73);
+        Map<String,Object> map=roomInfoService.getRoomInfo(117);
     }
 
 
@@ -61,23 +61,23 @@ public class ImplTest {
     }
 
     //管理员添加开门密码
-    @Test
-    public void setKey(){
-        Map<String ,String> map=new HashMap<>();
-        map.put("LockID","3");
-        map.put("UserID","-1");
-        map.put("Password","111111");
-        map.put("AvailableTimes","3");
-        map.put("FailureTime","2019-03-29");
-        ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
-        AdministratorService administratorService = (AdministratorService) context.getBean("administratorServiceImpl");
-        int result=administratorService.addkey(map);
-        if(result==0){
-            System.out.println("成功");
-        }else{
-            System.out.println("失败");
-        }
-    }
+//    @Test
+//    public void setKey(){
+//        Map<String ,String> map=new HashMap<>();
+//        map.put("LockID","3");
+//        map.put("UserID","-1");
+//        map.put("Password","111111");
+//        map.put("AvailableTimes","3");
+//        map.put("FailureTime","2019-03-29");
+//        ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
+//        AdministratorService administratorService = (AdministratorService) context.getBean("administratorServiceImpl");
+//        int result=administratorService.addkey(map);
+//        if(result==0){
+//            System.out.println("成功");
+//        }else{
+//            System.out.println("失败");
+//        }
+//    }
 
 
     //删除公寓楼
@@ -98,9 +98,11 @@ public class ImplTest {
     }
 
     @Test
-    public void load(String path) {
-
-        System.out.println(this.getClass().getResource("jdbc.properties").getPath()+'\n');
+    public void getOpenRecord(){
+        ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
+        LockService lockServiceImpl = (LockService) context.getBean("lockServiceImpl");
+        JSON allKeyByLockId = lockServiceImpl.getOpenRecord(2, 1);
+        System.out.println(allKeyByLockId);
     }
 
 

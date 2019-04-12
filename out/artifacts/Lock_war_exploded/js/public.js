@@ -496,7 +496,7 @@ function left(){
                 var ttx=0;
                 for(var floor in rooms)
                 {
-                    text=text+"<li class=\"floor\"><a class='"+"floor_"+apartmentID+"' href=\"#mao_"+apartmentID+"_"+floor+"\">"+floor+"楼</a></li>\n";
+                    text=text+"<li class=\"floor\"><a class='"+"floor_"+apartmentID+"' href=\"/lock/index#mao_"+apartmentID+"_"+floor+"\">"+floor+"楼</a></li>\n";
                     ttx++;
                 }
                 text=text+"</ul>\n" +
@@ -514,6 +514,55 @@ function left(){
 
 
 }
+
+
+/*点击弹出绑定门锁*/
+function bdmspopBox() {
+    console.log("弹出")
+    var bdmspopBox = document.getElementById("bdmspopBox");
+    var popLayer = document.getElementById("popLayer");
+    bdmspopBox.style.display = "block";
+    popLayer.style.display = "block";
+
+};
+
+/*点击关闭绑定门锁*/
+function bdmscloseBox() {
+    console.log("关闭")
+    var bdmspopBox = document.getElementById("bdmspopBox");
+    var popLayer = document.getElementById("popLayer");
+    bdmspopBox.style.display = "none";
+    popLayer.style.display = "none";
+}
+
+/**
+ * 绑定门锁
+ */
+function bdms(){
+    var introduction= $("#bdmssbh").val();
+    var roomId= $("#roomId").text();
+    var jsona={};
+    jsona["roomId"]=roomId;
+    jsona["introduction"]=introduction;
+            $.ajax({
+                url: '/lock/binding',
+                type: 'POST',
+                data:jsona,
+                dataType: 'json',
+                async: true,
+                success:function(data){
+                console.log(data)
+                    if(data["result"]==0)
+                    {
+                        alert(data["detail"]);
+                        bdmscloseBox();
+                    }else {
+                        alert("错误："+data["detail"]+"\n错误代码:"+data["result"]);
+                    }
+        }
+    })
+}
+
 //公共读取
 $(function() {
     //获取本人信息
@@ -534,4 +583,60 @@ $(function() {
         }
 
     })
+
+
+
+
+    var onOffjh= $("#onOffbj").text();
+    console.log("onoff="+onOffjh);
+    if(onOffjh==1)
+    {
+        console.log("门开着")
+        $(".div1").attr("name","on")
+        $(".div1").toggleClass('close1');
+        $(".div1").toggleClass('open1');
+        $(".div1").children(".div2").toggleClass('close2');
+        $(".div1").children(".div2").toggleClass('open2');
+    }
+
+    $(".div1").on('click',function() {
+        console.log('className======='+$(this).prop("className"))
+        if($(".div1").attr("name")=="off")
+        {
+            var jg=1;
+            console.log("门关着")
+
+
+            var jsona={};
+            jsona["lockId"]=$("#msLockId").text();
+            console.log(jsona["lockId"])
+            $.ajax({
+                url: '/lock/open',
+                type: 'POST',
+                timeout : 5000,
+                data:jsona,
+                dataType: 'json',
+                async: false,
+                success:function(data){
+                    jg=data["result"];
+                    console.log(data);
+                    alert(data["detail"]);
+                },
+                function(){
+                    console.log("错误");
+                }
+            });
+            console.log(jg)
+            if(jg==0)
+            {
+                console.log("开门")
+                $(this).attr("name","on")
+                $(this).toggleClass('close1');
+                $(this).toggleClass('open1');
+                $(this).children(".div2").toggleClass('close2');
+                $(this).children(".div2").toggleClass('open2');
+            }
+        }
+    })
+
 })

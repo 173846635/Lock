@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("lock")
-public class indexController {
+public class IndexController {
 
     @Autowired
     private AdministratorService administratorServiceImpl;

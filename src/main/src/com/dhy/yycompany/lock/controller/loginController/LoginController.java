@@ -36,12 +36,15 @@ public class LoginController {
         Map<String,String> map5= (Map<String,String>)login;
         String code = map5.get("code");
         String sellId = map5.get("id");
+        String userId = map5.get("userId");
         int i = Integer.parseInt(sellId);
+        int y = Integer.parseInt(userId);
         if(code.equals("10"))
         {
             System.out.println("登录成功");
             HttpSession session = GetSessionUtil.getSession();
             session.setAttribute("adminId", i);
+            session.setAttribute("userId",y);
         }
         //code为10登录成功
             return login;

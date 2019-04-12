@@ -83,4 +83,17 @@ public interface RoomInfoService {
      *修改房间租金
      */
     Map<String,Object> modifyPrice(int roomID,int price);
+
+    //管理员直接开门
+    /**
+     * 1.在指令表中添加开门指令
+     * @param lockID
+     * @param userID
+     * @return
+     */
+    Map<String,Object> openDoor(int lockID,int userID);
+
+
+    //绑定房间和门锁
+    Map<String,Object> bindRoomLock(int roomID,String introduction);
 }

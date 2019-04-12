@@ -1,5 +1,6 @@
 <%@ page import="com.dhy.yycompany.lock.bean.UserInfo" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.dhy.yycompany.lock.bean.RoomX" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page isELIgnored="false" %>
@@ -50,6 +51,8 @@
         <%--<div class="left_navigation xt zxt">--%>
         <!--右边房间窗口-->
         <div class="house_status1 dw">
+            <%--房间id标记--%>
+            <div id="roomId" style="display: none;">${requestScope.roomX.rId}</div>
             <div class="right_window dw">
             <div class="card">
                 <a class="ft_card ft" href="index">房态</a><span  class="ft"> > </span><a class="ft_card ft"  href="information?roomId=${requestScope.roomX.rId}">${requestScope.roomX.rApartmentName}-${requestScope.roomX.rFloor}楼-${requestScope.roomX.rNum}</a>
@@ -85,7 +88,13 @@
 
                                 <div class="message3 ke">
                                     <label style="float:left;">门锁控制</label>
+                                    <%
+                                        RoomX roomX = (RoomX) request.getAttribute("roomX");
+                                        if(roomX.getrLockId()!=0)
+                                        {
+                                    %>
                                     <div id="onOffbj" style="display: none;">${requestScope.onOff}</div>
+                                    <div id="msLockId" style="display: none;">${requestScope.roomX.rLockId}</div>
                                     <div style="margin-left: 10px">
                                         <span style="margin-left: 10px" class="left1">关</span>
                                         <div name="off" style="margin-left: 5px; margin-right: 5px" class="div1 left1 open1">
@@ -100,10 +109,25 @@
 
                                     <div class="butt1">
                                         <a href="information/key?roomId=${requestScope.roomX.rId}">
-                                        <button style="cursor:pointer" class="gl bd " >门锁管理</button>
+                                            <button style="cursor:pointer" class="gl bd " >门锁管理</button>
                                         </a>
                                     </div>
+                                    <%
+                                    }else{
+                                    %>
+                                    <div style="margin-left: 10px;width: 260px;font-size: 10px;color: black; margin-top: 2px" class="left">
+                                        无绑定的门锁，请先绑定门锁
+                                    </div>
+
+                                    <div class="butt1">
+                                        <button style="cursor:pointer" class="gl bd " >绑定门锁</button>
+                                    </div>
+                                    <%
+                                        }
+                                    %>
                                 </div>
+
+
                                 <%
                                     int i;
                                     List<UserInfo> users = (List<UserInfo>) request.getAttribute("users");
@@ -189,7 +213,7 @@
 <div class="main_container dw">
     <div class="navbar-header">
         <div class="versions">
-            <a href="#">
+            <a href="/lock/index">
                 gy公寓
                 <span>版本v0.1</span>
             </a>
@@ -420,7 +444,7 @@
 
 
     </div>
-    <div onclick="changeRent()"><div id="b1" class="bd xyb finger">确认</div></div>
+    <div onclick="bdms()"><div id="b1" class="bd xyb finger">确认</div></div>
 
 </div>
 

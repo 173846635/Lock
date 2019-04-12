@@ -96,12 +96,7 @@ public class UserServiceImpl implements UserService {
                 params.put("result", "ok");
                 params.put("method","delTempraryKey");
                 params.put("kUuid",keyInfos.get(i).getkUuid());
-//            params.put("kFailureTime",keyInfo.getkFailureTime());
-//            params.put("kAvailableTimes",keyInfo.getkAvailableTimes().toString());
-//            params.put("kDelete",keyInfo.getkDelete().toString());
-//            params.put("kIsModify",keyInfo.getkIsModify().toString());
-//            params.put("kLockId",keyInfo.getkLockId().toString());
-//            params.put("kUserId",keyInfo.getkUserId().toString());
+
 
                 String jsonString = JSONObject.toJSONString(params);
                 Instruction instruction=new Instruction();
@@ -171,8 +166,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 增加房间户主
-     *
-     *
      * 1。前端把用户手机号和用户个人信息发送到后台
      * 2。在user表中创建数据
      * 3。根据手机号在手机用户表中修改userID字段为新生成user_id的值

@@ -1,18 +1,18 @@
-// /*点击弹出按钮*/
-// function popBox() {
-//     var popBox = document.getElementById("popBox");
-//     var popLayer = document.getElementById("popLayer");
-//     popBox.style.display = "block";
-//     popLayer.style.display = "block";
-// };
-//
-// /*点击关闭按钮*/
-// function closeBox() {
-//     var popBox = document.getElementById("popBox");
-//     var popLayer = document.getElementById("popLayer");
-//     popBox.style.display = "none";
-//     popLayer.style.display = "none";
-// }
+/*点击弹出入住按钮*/
+function ruzhupopBox() {
+    var ruzhupopBox = document.getElementById("ruzhupopBox");
+    var popLayer = document.getElementById("popLayer");
+    ruzhupopBox.style.display = "block";
+    popLayer.style.display = "block";
+};
+
+/*点击关闭按钮*/
+function ruzhucloseBox() {
+    var ruzhupopBox = document.getElementById("ruzhupopBox");
+    var popLayer = document.getElementById("popLayer");
+    ruzhupopBox.style.display = "none";
+    popLayer.style.display = "none";
+}
 
 $(function() {
 var b=2;
@@ -28,6 +28,8 @@ var b=2;
     $(document).on("click","#ks",function() {
         console.log("ks")
         //ajax
+            var text="<div></div>"
+
         if(b!=5) {
             var tet = "<div id=\"b" + b + "\" class=\"bd xyb finger\">下一步</div>";
         }else {
@@ -46,11 +48,11 @@ var b=2;
         }
     })
 
-    //新建密码
-    $(document).on("click","#gb",function() {
-        //ajax
-        closeBox();
-    })
+    // //新建密码
+    // $(document).on("click","#gb",function() {
+    //     //ajax
+    //     closeBox();
+    // })
 
 
 })

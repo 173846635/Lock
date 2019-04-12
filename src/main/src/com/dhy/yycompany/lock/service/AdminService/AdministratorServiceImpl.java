@@ -28,26 +28,48 @@ public class AdministratorServiceImpl implements AdministratorService {
     private SqlSessionFactory sqlSessionFactory;
 
     @Override
-    public int addkey(Map<String ,String> map) {
+    public Map<String, Object> addkey(int lockId,int adminId,String password,int num,String time) {
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        KeyAndAdminMapper keyAndAdminMapper = sqlSession.getMapper(KeyAndAdminMapper.class);
+        KeyAndAdminExample keyAndAdminExample = new KeyAndAdminExample();
+        KeyAndAdminExample.Criteria criteria = keyAndAdminExample.createCriteria();
+        criteria.andAdminIdEqualTo(adminId);
+        List<KeyAndAdmin> keyAndAdmins = keyAndAdminMapper.selectByExample(keyAndAdminExample);
+        Map<String, Object> map=new HashMap<>();
+        if(keyAndAdmins.size()==0)
+        {
+            map.put("result", 1);
+            map.put("message", "添加密码失败");
+            return map;
+        }
+        KeyAndAdmin keyAndAdmin = keyAndAdmins.get(0);
+        int userId = keyAndAdmin.getUserId();
+        System.out.println("添加密码的userId="+userId);
         KeyInfo keyInfo=new KeyInfo();
         keyInfo.setkUuid(UUID.randomUUID().toString().replaceAll("-", ""));
-        keyInfo.setkLockId(Integer.valueOf(map.get("LockID")));
-        keyInfo.setkUserId(Integer.parseInt(map.get("UserID")));
-        keyInfo.setkPassword(map.get("Password"));
-        keyInfo.setkAvailableTimes(Integer.valueOf(map.get("AvailableTimes")));
-        keyInfo.setkFailureTime(map.get("FailureTime"));
+        keyInfo.setkLockId(lockId);
+        keyInfo.setkUserId(userId);
+        keyInfo.setkPassword(password);
+        keyInfo.setkAvailableTimes(num);
+        if(!time.equals("0")) {
+            keyInfo.setkFailureTime(time);
+        }
         keyInfo.setkIsModify(1);
         keyInfo.setkDelete(0);
-        SqlSession sqlSession=sqlSessionFactory.openSession();
+
         KeyInfoMapper keyInfoMapper=sqlSession.getMapper(KeyInfoMapper.class);
-        int num=keyInfoMapper.insert(keyInfo);
+        int num1=keyInfoMapper.insert(keyInfo);
         sqlSession.close();
-        if(num==1){
+        if(num1==1){
             System.out.println("添加密码成功");
-            return 0;
+            map.put("result", 0);
+            map.put("message", "添加密码成功");
+            return map;
         }else{
             System.out.println("添加密码失败");
-            return 1;
+            map.put("result", 2);
+            map.put("message", "添加密码失败");
+            return map;
         }
     }
 
@@ -199,9 +221,21 @@ public class AdministratorServiceImpl implements AdministratorService {
             int i = administratorMapper.insertSelective(administrator);
             if(i==1)
             {
-                System.out.println("创建成功");
-                map.put("result", 1);
-                map.put("message", "创建成功");
+                KeyAndAdminMapper keyAndAdminMapper = sqlSession.getMapper(KeyAndAdminMapper.class);
+                KeyAndAdmin keyAndAdmin = new KeyAndAdmin();
+                keyAndAdmin.setAdminId(administrator.getAdminId());
+                keyAndAdmin.setUserId((-(administrator.getAdminId())));
+                int i1 = keyAndAdminMapper.insertSelective(keyAndAdmin);
+                if(i1==1) {
+                    System.out.println("创建成功");
+                    map.put("result", 1);
+                    map.put("message", "创建成功");
+                }else if(i1==0)
+                {
+                    System.out.println("创建失败");
+                    map.put("result", 4);
+                    map.put("message", "创建失败");
+                }
             }
             else {
                 System.out.println("创建失败");
@@ -214,6 +248,7 @@ public class AdministratorServiceImpl implements AdministratorService {
             map.put("result", 2);
             map.put("message", "创建失败，账号以存在");
         }
+        sqlSession.close();
         return map;
     }
 }

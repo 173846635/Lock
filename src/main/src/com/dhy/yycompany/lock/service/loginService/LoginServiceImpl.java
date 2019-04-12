@@ -3,8 +3,11 @@ package com.dhy.yycompany.lock.service.loginService;
 
 import com.alibaba.fastjson.JSON;
 
+import com.dhy.yycompany.lock.bean.AdminAndKey;
+import com.dhy.yycompany.lock.bean.AdminAndKeyExample;
 import com.dhy.yycompany.lock.bean.Administrator;
 import com.dhy.yycompany.lock.bean.AdministratorExample;
+import com.dhy.yycompany.lock.dao.AdminAndKeyMapper;
 import com.dhy.yycompany.lock.dao.AdministratorMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -31,32 +34,33 @@ public class LoginServiceImpl implements LoginService{
         System.out.println(account+":::"+password);
         int code=0;
         int id=-1;
+        int userId=-1;
         if(account==null||password==null)
         {
             code=23;
         }
         SqlSession openSession = sqlSessionFactory.openSession();
-        AdministratorMapper administratorMapper = openSession.getMapper(AdministratorMapper.class);
+        AdminAndKeyMapper adminAndKeyMapper = openSession.getMapper(AdminAndKeyMapper.class);
         //System.out.println(borrowSellMapper);
-        AdministratorExample administratorExample = new AdministratorExample();
+        AdminAndKeyExample adminAndKeyExample = new AdminAndKeyExample();
         //System.out.println(borrowSellExample);
-        AdministratorExample.Criteria criteria = administratorExample.createCriteria();
+        AdminAndKeyExample.Criteria criteria = adminAndKeyExample.createCriteria();
         criteria.andAdminAccountEqualTo(account);
         criteria.andAdminDeleteEqualTo(0);
-        List<Administrator> administrators = administratorMapper.selectByExample(administratorExample);
-        if(administrators.size()==0)
+        List<AdminAndKey> adminAndKeys = adminAndKeyMapper.selectByExample(adminAndKeyExample);
+        if(adminAndKeys.size()==0)
         {
             openSession.close();
             code= 21;
         }
         else{
 
-            Administrator administrator;
-            administrator = administrators.get(0);
-            id = administrator.getAdminId();
+            AdminAndKey adminAndKey = adminAndKeys.get(0);
+            id = adminAndKey.getAdminId();
+            userId=adminAndKey.getUserId();
             System.out.println("id="+id);
             //System.out.println(borrowSell.getPassword());
-            if(!password.equals(administrator.getAdminPassword()))
+            if(!password.equals(adminAndKey.getAdminPassword()))
             {
                 openSession.close();
                 code= 22;
@@ -82,7 +86,7 @@ public class LoginServiceImpl implements LoginService{
         {
             msg="账号或密码为空";
         }
-        String jsStr = ("{\"code\":\""+code+"\",\"id\":\""+id+"\",\"msg\":\""+msg+"\"}");
+        String jsStr = ("{\"code\":\""+code+"\",\"id\":\""+id+"\",\"msg\":\""+msg+"\",\"userId\":\""+userId+"\"}");
         JSON jsonObject = JSON.parseObject(jsStr);
         openSession.close();
         return jsonObject;

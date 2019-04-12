@@ -43,9 +43,12 @@ public class RoomInfoServiceImpl implements RoomInfoService {
             roomX.setrApartmentName(apartment.getaName());
 
             int integer = roomX.getrLockId();
-            LockInfoMapper lockInfoMapper = sqlSession.getMapper(LockInfoMapper.class);
-            LockInfo lockInfo = lockInfoMapper.selectByPrimaryKey(integer);
-            roomX.setOnOff(lockInfo.getlStatus());
+            System.out.println("lock-------------------"+integer);
+            if(integer!=0) {
+                LockInfoMapper lockInfoMapper = sqlSession.getMapper(LockInfoMapper.class);
+                LockInfo lockInfo = lockInfoMapper.selectByPrimaryKey(integer);
+                roomX.setOnOff(lockInfo.getlStatus());
+            }
         }
         Map<String, Object> map = new HashMap<>();
         map.put("roomX",roomX);
@@ -163,6 +166,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
             map.put("message", "房间存在用户，不能删除");
         }
         System.out.println(map);
+        sqlSession.close();
         return map;
     }
 
@@ -295,6 +299,73 @@ public class RoomInfoServiceImpl implements RoomInfoService {
         }else{
             map.put("result", 1);
             map.put("message", "修改租金失败");
+        }
+        return map;
+    }
+
+
+    //管理员直接开门
+    @Override
+    public Map<String, Object> openDoor(int lockID, int userID) {
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        Instruction instruction = new Instruction();
+        instruction.setiUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+        instruction.setiLockId(lockID);
+        instruction.setiUserId(userID);
+        instruction.setiIsDelete(0);
+        instruction.setiIsModify(1);
+        instruction.setiIsUser(0);
+        instruction.setiIsLock(1);
+        instruction.setiIsKey(0);
+        instruction.setiIsFinger(0);
+        instruction.setiUserInfo("");
+        instruction.setiLockInfo("{\"result\":\"ok\",\"method\":\"openDoor\"}");
+        instruction.setiKeyInfo("");
+        instruction.setiFingerInfo("");
+        InstructionMapper instructionMapper=sqlSession.getMapper(InstructionMapper.class);
+        int result=instructionMapper.insert(instruction);
+        Map<String,Object> map=new HashMap<>();
+        if(result==1){
+            map.put("result",0);
+            map.put("detail","开门指令生成成功");
+        }else{
+            map.put("result",1);
+            map.put("detail","开门指令生成失败");
+        }
+
+        return map;
+    }
+
+
+    @Override
+    public Map<String, Object> bindRoomLock(int roomID, String introduction) {
+        SqlSession sqlSession=sqlSessionFactory.openSession();
+        LockInfoExample lockInfoExample=new LockInfoExample();
+        LockInfoExample.Criteria criteria=lockInfoExample.createCriteria();
+        criteria.andLIntroductionEqualTo(introduction);
+        LockInfoMapper lockInfoMapper=sqlSession.getMapper(LockInfoMapper.class);
+        List<LockInfo> lockInfos=lockInfoMapper.selectByExample(lockInfoExample);
+        Map<String,Object> map=new HashMap<>();
+        if(lockInfos!=null && lockInfos.size()!=0){
+            System.out.println(lockInfos.get(0).getlIntroduction());
+            int lock_id=lockInfos.get(0).getlId();
+            RoomExample roomExample=new RoomExample();
+            RoomExample.Criteria criteria1=roomExample.createCriteria();
+            criteria1.andRIdEqualTo(roomID);
+            Room room=new Room();
+            room.setrLockId(lock_id);
+            RoomMapper roomMapper=sqlSession.getMapper(RoomMapper.class);
+            int resultRoomMapper=roomMapper.updateByExampleSelective(room,roomExample);
+            if(resultRoomMapper==1){
+                map.put("result",0);
+                map.put("detail","房间绑定门锁成功");
+            }else{
+                map.put("result",1);
+                map.put("detail","房间绑定门锁失败");
+            }
+        }else{
+            map.put("result",1);
+            map.put("detail","房间绑定门锁失败");
         }
         return map;
     }

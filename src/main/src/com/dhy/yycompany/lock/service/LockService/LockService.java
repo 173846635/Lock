@@ -16,4 +16,10 @@ public interface LockService {
      * @return
      */
     public JSON getAllKeyByLockId(int lockId,int pageNum);
+
+    /**
+     * 获取开门记录
+     * @return
+     */
+    public JSON getOpenRecord(int lockId,int pageNum);
 }

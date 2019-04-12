@@ -55,7 +55,7 @@
     <div class="house_status1 dw">
         <div class="right_window dw">
             <div class="card">
-                <a class="ft_card ft" href="index.jsp">房态</a>
+                <a class="ft_card ft" href="/index">房态</a>
             </div>
             <div>
              <%
@@ -133,7 +133,7 @@
                                     </a>
                                 <%}else{
                                 %>
-                                    <a href="open?roomId=<%=id%>">
+                                    <a href="vacant?roomId=<%=id%>">
                                         <button class="finger finger right_room">
                                             <div class="right_room_number">
                                                 <span><%=roomNum%></span>
@@ -200,7 +200,7 @@
 <div class="main_container dw">
     <div class="navbar-header">
         <div class="versions">
-            <a href="#">
+            <a href="/lock/index">
                 gy公寓
                 <span>版本v0.1</span>
             </a>

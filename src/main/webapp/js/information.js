@@ -112,40 +112,7 @@ function checkOut(){
 $(function() {
 
 
-    var onOffjh= $("#onOffbj").text();
-    console.log("onoff="+onOffjh);
-    if(onOffjh==1)
-    {
-        console.log("门开着")
-        $(".div1").attr("name","on")
-        $(".div1").toggleClass('close1');
-        $(".div1").toggleClass('open1');
-        $(".div1").children(".div2").toggleClass('close2');
-        $(".div1").children(".div2").toggleClass('open2');
-    }
 
-    $(".div1").on('click',function() {
-        console.log('className======='+$(this).prop("className"))
-        if( $(".div1").attr("name")=="on")
-        {
-            console.log("门开着")
-            console.log("关门")
-            $(this).attr("name","off")
-
-        }else if($(".div1").attr("name")=="off")
-        {
-            console.log("门关着")
-            console.log("开门")
-            $(this).attr("name","on")
-        }
-        $(this).toggleClass('close1');
-        $(this).toggleClass('open1');
-        $(this).children(".div2").toggleClass('close2');
-        $(this).children(".div2").toggleClass('open2');
-
-
-
-    })
 
 
     $(document).on("click","#xgzj",function() {

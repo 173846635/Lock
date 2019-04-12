@@ -69,6 +69,34 @@
 
 
 
+/*新建密码弹出层*/
+#xjmm {
+    display: none;
+    background-color: #eaeaea;
+    z-index: 11;
+    width: 300px;
+    height: 400px;
+    position:fixed;
+    top:0;
+    right:0;
+    left:0;
+    bottom:0;
+    margin:auto;
+}
+
+#xjmm .close{
+    text-align: right;
+    margin-right: 5px;
+    background-color: #eaeaea;
+}
+
+/*关闭按钮*/
+#xjmm .close a {
+    text-decoration: none;
+    color: #2D2C3B;
+}
+
+
 
 .ys{
 background-color:#a4d9ee;

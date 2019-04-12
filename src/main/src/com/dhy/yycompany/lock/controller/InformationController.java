@@ -27,7 +27,7 @@ public class InformationController {
     UserService userServiceImpl;
 
     /**
-     * 进入以居住房间页面
+     * 进入已居住房间页面
      * @param roomId
      * @param mod
      * @return
@@ -52,7 +52,7 @@ public class InformationController {
 
     }
 
-    //删除楼层
+    //删除用户
     @RequestMapping(value = {"quit"})
     @ResponseBody
     public JSON quit(@RequestParam("roomId") int roomId,@RequestParam("userId")int userId)
@@ -85,16 +85,16 @@ public class InformationController {
         return jsonObject;
     }
 
-    //开门
-    @RequestMapping("open")
-    @ResponseBody
-    public JSON open(@RequestParam("roomId") int roomId)
-    {
-        Map<String, Object> stringObjectMap = userServiceImpl.deleteAllUsers(roomId);
-        JSON jsonObject = new JSONObject(stringObjectMap);
-        System.out.println("jsonObject="+jsonObject);
-        return jsonObject;
-    }
+//    //开门
+//    @RequestMapping("open")
+//    @ResponseBody
+//    public JSON open(@RequestParam("roomId") int roomId)
+//    {
+//        Map<String, Object> stringObjectMap = userServiceImpl.deleteAllUsers(roomId);
+//        JSON jsonObject = new JSONObject(stringObjectMap);
+//        System.out.println("jsonObject="+jsonObject);
+//        return jsonObject;
+//    }
 
 
 }
