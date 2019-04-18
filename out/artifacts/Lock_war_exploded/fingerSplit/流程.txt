@@ -1,0 +1,9 @@
+getImage.py  获取指纹
+ganchar_1.py 获取成功后调用，生成特征文件
+
+getImage.py 再次获取指纹
+ganchar_2.py 获取成功后调用，生成特征文件
+
+regmodel.py 合并两个指纹的特征文件，生成指纹模版文件
+storeChar.py 将指纹模版文件保存到指纹库
+upload.py 上传指纹模版文件
