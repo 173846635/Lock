@@ -267,6 +267,7 @@ public class RoomInfoServiceImpl implements RoomInfoService {
         {
             map.put("result",2);
             map.put("message", "操作失败,该楼层房间有人住或预定了,不能进行删除操作!");
+            return map;
         }
 
         Room room = new Room();

@@ -1,5 +1,7 @@
 package com.dhy.yycompany.lock.service.UserService;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.Map;
 
 public interface UserService {
@@ -26,6 +28,6 @@ public interface UserService {
      * 5。把指纹信息发送到树莓派端
      * 6。room表的人数字段加1
      */
-    Map<String,String> addHomeMaster(String account, int roomID, String name, String sex, String idCard,
-                                     String phone, String stayTime, String retreatTime, String introduction);
+    Map<String,Object> addHomeMaster(JSON json);
+
 }

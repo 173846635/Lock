@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 import java.util.Map;
 
 @Controller
@@ -43,11 +44,30 @@ public class LoginController {
         {
             System.out.println("登录成功");
             HttpSession session = GetSessionUtil.getSession();
+            Enumeration attributeNames = session.getAttributeNames();
+            while(attributeNames.hasMoreElements()){
+                session.removeAttribute(attributeNames.nextElement().toString());
+            }
             session.setAttribute("adminId", i);
             session.setAttribute("userId",y);
+            session.setAttribute("username",username);
+            String username1= (String) session.getAttribute("username");
+            System.out.println("username1="+username1);
         }
         //code为10登录成功
             return login;
+    }
+
+    //退出
+    @RequestMapping("login")
+    public String login()
+    {
+        HttpSession session = GetSessionUtil.getSession();
+        Enumeration attributeNames = session.getAttributeNames();
+        while(attributeNames.hasMoreElements()){
+            session.removeAttribute(attributeNames.nextElement().toString());
+        }
+        return "../../login.html";
     }
 
 

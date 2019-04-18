@@ -68,7 +68,7 @@ function getmyMessage() {
         dataType: 'json',
         async: true,
         success:function(data){
-            //console.log(data);
+            console.log(data);
             var myAccount=data["adminAccount"];
             var myPassword=data["adminPassword"];
             var myName=data["adminName"];
@@ -77,6 +77,9 @@ function getmyMessage() {
             $('#myPassword').val(myPassword);
             $('#myName').val(myName);
             $('#myPermission').val(myPermission);
+            $('#nc').text(myName);
+            $('#qx').text(myPermission+"级权限");
+            $('#txxs').attr("src","/img/data/"+myAccount+"/tx/tx0.png");
         },
         function(){
             console.log("错误");
@@ -240,10 +243,8 @@ function addMyMessage(){
     var password=$.trim($('#password2').val());
     var permission=$('input[name="permission"]:checked').val();
     var name=$.trim($('#name2').val());
-    console.log(account+":"+password+":"+permission+":"+name)
-    var dq1 =$.trim($('#dq').val());//当前页
-    var dq = parseInt(dq1);
-    var jsona = {};
+    var animateimg = $("#Album_img").val(); //获取上传的图片名 带//
+
     if(account==null||account=="")
     {
         alert("账号不能为空");
@@ -259,31 +260,59 @@ function addMyMessage(){
         alert("姓名不能为空");
         return 0;
     }
-    jsona["account"] =  account;
-    jsona["password"] =  password;
-    jsona["permission"] =  permission;
-    jsona["name"] =  name;
-    console.log(jsona);
-    $.ajax({
-        url: '/lock/addOtherMessage',
-        type: 'POST',
-        data:jsona,
-        dataType: 'json',
-        async: true,
-        success:function(data){
-            console.log(data);
-            alert(data["message"])
-            if(data["result"]==1)
-            {
+    if(animateimg==null||animateimg=="")
+    {
+        alert("图片不能为空");
+        return 0;
+    }
+    var dq1 =$.trim($('#dq').val());//当前页
+    var dq = parseInt(dq1);
 
-                getOtherMessage(dq);
-                xjglycloseBox();
-            }
-        },
-        function(){
-            console.log("错误");
-        }
-    });
+    console.log("animateimg="+animateimg);
+    var imgarr=animateimg.split('\\'); //分割
+    console.log("imgarr="+imgarr);
+    var myimg=imgarr[imgarr.length-1]; //去掉 // 获取图片名
+    console.log("myimg="+myimg);
+    var houzui = myimg.lastIndexOf('.'); //获取 . 出现的位置
+    console.log("houzui="+houzui);
+    var ext = myimg.substring(houzui, myimg.length).toUpperCase(); //切割 . 获取文件后缀
+    console.log("ext="+ext);
+    var file = $('#Album_img').get(0).files[0]; //获取上传的文件
+    var fileSize = file.size;      //获取上传的文件大小
+    var maxSize = 1048576;       //最大1MB
+    if(ext !='.PNG' && ext !='.GIF' && ext !='.JPG' && ext !='.JPEG' && ext !='.BMP'){
+        parent.layer.msg('文件类型错误,请上传图片类型');
+        return false;
+    }else if(parseInt(fileSize) >= parseInt(maxSize)){
+        parent.layer.msg('上传的文件不能超过1MB');
+        return false;
+    }else{
+        var data = new FormData($('#form1')[0]);
+        data.append("account",account);
+        data.append("password",password);
+        data.append("permission",permission);
+        data.append("name",name);
+        console.log(data);
+        $.ajax({
+            url: "/lock/addOtherMessage",
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(function(ret){
+            console.log(ret)
+            getOtherMessage(dq);
+            xjglycloseBox();
+
+        });
+        return false;
+    }
+
+
+
+
 }
 
 //弹出修改公寓楼
@@ -326,7 +355,7 @@ function addfloorQ() {
         "                <label style=\"font-size: 15px; font-weight:bold \">楼层：</label>\n" +
         "\n" +
         "                <span style=\"padding-top:6px\" class=\"pull-left\">第</span>\n" +
-        "                <input   style=\"width: 30px; margin: auto; text-align:\" class=\"zjfjk3 fsfloor\" type=\"text\" name=\"floorname\" id=\"floor1id\" value=\"\" placeholder>\n" +
+        "                <input   style=\"width: 30px; margin: auto; text-align:\" class=\"zjfjk3 fsfloor shuzi\" type=\"text\" name=\"floorname\" id=\"floor1id\" value=\"\" placeholder>\n" +
         "<span class=\"pull-left mr20\" style=\"padding-top:6px\">  层</span>\n" +
         "            </div>\n" +
         "            <br/>";
@@ -450,11 +479,14 @@ function deleteFloorH(id1) {
         async:false,
         success:function(data){
             console.log(data);
-            alert(data["message"])
+
             if(data["result"]==0)
             {
+                alert(data["message"])
                 rt=0;
+                window.location.reload()
             }else {
+                alert("错误:"+data["message"]+"\n错误代码:"+data["result"]);
                 rt=1;
             }
             // $("#zbnr").empty();
@@ -555,6 +587,7 @@ function bdms(){
                     if(data["result"]==0)
                     {
                         alert(data["detail"]);
+                        window.location.replace("/lock/vacant?roomId="+roomId);
                         bdmscloseBox();
                     }else {
                         alert("错误："+data["detail"]+"\n错误代码:"+data["result"]);
@@ -562,6 +595,84 @@ function bdms(){
         }
     })
 }
+
+function date(){
+    var myDate = new Date;
+    var year = myDate.getFullYear(); //获取当前年
+    var mon = myDate.getMonth() + 1; //获取当前月
+    var date = myDate.getDate(); //获取当前日
+    // var h = myDate.getHours();//获取当前小时数(0-23)
+    // var m = myDate.getMinutes();//获取当前分钟数(0-59)
+    // var s = myDate.getSeconds();//获取当前秒
+    var week = myDate.getDay();
+    var weeks = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    console.log(year, mon, date, weeks[week])
+    $("#date").html(mon + "月" + date + "日" + weeks[week]);
+}
+
+
+//上传图片，用于显示
+function sc(){
+    var animateimg = $("#Album_img").val(); //获取上传的图片名 带//
+    console.log("animateimg="+animateimg);
+    var imgarr=animateimg.split('\\'); //分割
+    console.log("imgarr="+imgarr);
+    var myimg=imgarr[imgarr.length-1]; //去掉 // 获取图片名
+    console.log("myimg="+myimg);
+    var houzui = myimg.lastIndexOf('.'); //获取 . 出现的位置
+    console.log("houzui="+houzui);
+    var ext = myimg.substring(houzui, myimg.length).toUpperCase(); //切割 . 获取文件后缀
+    console.log("ext="+ext);
+    var file = $('#Album_img').get(0).files[0]; //获取上传的文件
+    var fileSize = file.size;      //获取上传的文件大小
+    var maxSize = 1048576;       //最大1MB
+    if(ext !='.PNG' && ext !='.GIF' && ext !='.JPG' && ext !='.JPEG' && ext !='.BMP'){
+        parent.layer.msg('文件类型错误,请上传图片类型');
+        return false;
+    }else if(parseInt(fileSize) >= parseInt(maxSize)){
+        parent.layer.msg('上传的文件不能超过1MB');
+        return false;
+    }else{
+        var data = new FormData($('#form1')[0]);
+
+        $.ajax({
+            url: "/lock/getImg",
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            cache: false,
+            processData: false,
+            contentType: false
+        }).done(function(ret){
+            console.log("上传成功")
+            $('#tpzs').attr("src","../../img/tx/"+ret["result"]+".jpg");
+
+        });
+        return false;
+    }
+}
+
+
+// function uppic()
+// {
+//     $file = request()->file('f');
+//     $info = $file->move(ROOT_PATH . 'public/uploads/avatar');
+//     $a=$info->getSaveName();
+//     $imgp= str_replace("\\","/",$a);
+//     $imgpath='uploads/avatar/'.$imgp;
+//     $banner_img= $imgpath;
+//     $response = array();
+//     if($info){
+//         $response['isSuccess'] = true;
+//         $response['f'] = $imgpath;
+//     }else{
+//         $response['isSuccess'] = false;
+//     }
+//
+//     echo json_encode($response);
+// }
+
+
 
 //公共读取
 $(function() {
@@ -571,6 +682,9 @@ $(function() {
     getOtherMessage("shouye")
     //获取左边
     left();
+
+    //读取当前日期
+    date()
 
     //删除楼层（前端）
     $(document).on("click",".lcscjh",function() {

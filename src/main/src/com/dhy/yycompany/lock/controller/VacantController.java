@@ -1,7 +1,9 @@
 package com.dhy.yycompany.lock.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dhy.yycompany.lock.bean.RoomX;
+import com.dhy.yycompany.lock.service.FingerService.FingerPrintService;
 import com.dhy.yycompany.lock.service.UserService.UserService;
 import com.dhy.yycompany.lock.service.roomInfoService.RoomInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class VacantController {
     @Autowired
     UserService userServiceImpl;
 
+    @Autowired
+    FingerPrintService fingerPrintServiceImpl;
+
     @RequestMapping("vacant")
     public String vacant(@RequestParam("roomId") int roomId, ModelMap mod)
     {
@@ -39,10 +44,30 @@ public class VacantController {
     //入住
     @RequestMapping(value = {"check_in"})
     @ResponseBody
-    public JSON checkIn(@RequestParam("roomId") int roomId)
+    public JSON checkIn(@RequestParam("json") String json)
     {
-//        userServiceImpl.addHomeMaster
-//        return lockMessage;
-        return null;
+        System.out.println("入住");
+        System.out.println(json);
+        JSON jsonbean = JSON.parseObject(json);
+        Map<String, Object> stringObjectMap = userServiceImpl.addHomeMaster(jsonbean);
+        JSON jsonObject = new JSONObject(stringObjectMap);
+        System.out.println(jsonObject);
+        return jsonObject;
+    }
+
+    //指纹luru
+    @RequestMapping(value = {"fingerPrint"})
+    @ResponseBody
+    public JSON fingerPrint(@RequestParam("userId") int userId,@RequestParam("lockId") int lockId,@RequestParam("process") int process)
+    {
+        System.out.println("指纹录入");
+        System.out.println("userId="+userId);
+        System.out.println("lockId="+lockId);
+        System.out.println("process="+process);
+        Map<String, Object> stringObjectMap = fingerPrintServiceImpl.addFingerPrint(userId, lockId, process);
+        JSON jsonObject = new JSONObject(stringObjectMap);
+        System.out.println("返回");
+        System.out.println(jsonObject);
+        return jsonObject;
     }
 }

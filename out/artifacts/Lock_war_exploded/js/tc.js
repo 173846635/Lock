@@ -79,7 +79,7 @@ function xjglypopBox() {
 
 /*点击关闭按钮*/
 function xjglycloseBox() {
-
+    $('#tpzs').attr("src","../../img/tx/tx0.jpg");
     var xjglypopBox = document.getElementById("xjglypopBox");
     var popLayer2 = document.getElementById("popLayer2");
     xjglypopBox.style.display = "none";

@@ -98,20 +98,20 @@ img{display: block;}
 
  
 /*---------------------------------登录页面------------------------------------*/
-.ldL_con{height: 610px; background:#f5f8fb; background: url(../img/cc.png)  no-repeat }
-.ldL_con_in{width: 1000px; height: 541px; overflow: hidden; margin: 0 auto; background: url(../img/0.png)  no-repeat left top;}
+.ldL_con{position: fixed;height: auto; background:#f5f8fb; display: block;background: url(/img/cc3.jpg);background-repeat:no-repeat;background-size:100% 100%;-moz-background-size:100% 100%;left: 0px;bottom: 65px;right: 0px;top:106px;}
+.ldL_con_in{position: fixed;width: 1000px; height: 541px; overflow: hidden; margin: 0 auto; background: url(/img/0.png)  no-repeat left top;;bottom: 0px;right:15%;top:10%;}
 .ld_form{width: 290px; height: 254px; overflow: hidden; padding-left: 30px; margin:178px 0 0 609px; }
 .form_title{font-size: 18px; font-family: Microsoft Yahei; color: #336599; margin: 26px 0 15px 0;}
 .err_m{ color: #f21b00;}
 .ld_form p{margin-bottom:13px ;}
-.ld_form input{width: 233px; height: 20px; line-height: 20px; padding:6px 5px 6px 30px; border: 1px solid #97abc5; background: url(../img/icon01.png) no-repeat 10px 8px; }
+.ld_form input{width: 233px; height: 20px; line-height: 20px; padding:6px 5px 6px 30px; border: 1px solid #97abc5; background: url(/img/icon01.png) no-repeat 10px 8px; }
 .ld_form .ld_pass{background-position: 13px -47px;}
 .ld_login{padding:10px 29px 0 0; overflow: hidden;}
-.ld_login_in{width: 260px; height: 31px; background:url(../img/ld_login.jpg); line-height: 31px; font-size: 14px; color: #fff; text-align: center; cursor: pointer; margin-bottom: 10px; }
+.ld_login_in{width: 260px; height: 31px; background:url(/img/ld_login.jpg); line-height: 31px; font-size: 14px; color: #fff; text-align: center; cursor: pointer; margin-bottom: 10px; }
 .ld_login a{float: right; color: #7F7F7F;}
   
 
-.ld_footer{height: 64px; border-top: 1px solid #8ac9ec; background: #f0f8ff;margin-top: 2px;}
+.ld_footer{position: fixed;height: 64px; border-top: 1px solid #8ac9ec; background: #f0f8ff;left: 0px;bottom: 0px;right: 0px;}
 .ld_footer_in{width: 450px; margin: 0 auto; padding-top: 10px;}
 .ld_footer_in p{width:100%; line-height: 22px; text-align: center;}
 

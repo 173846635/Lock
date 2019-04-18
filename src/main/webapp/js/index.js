@@ -154,7 +154,7 @@ function delectRoom(roomId){
 $(function() {
     var n=1;
 
-    //添加房间弹窗
+    //添加房间前端
     $(document).on("click","#zjfj",function(){
         console.log("添加房间")
         var h="fjcj"+n;
@@ -162,7 +162,7 @@ $(function() {
         var txt="<div class=\"left zjfjk\" id='"+h+"'>\n" +
             "                <div class=\"right1 iconfont zjfjkgb finger\" onclick=\"fjscjh('"+h+"')\">&#xe613;</div>\n" +
             "                <div class=\"zjfjk2\">\n" +
-            "                    <input id=\""+i+"\" class=\"zjfjk3 xzfjbj1\" placeholder=\"输入房号\" name=\"houseelementname\">\n" +
+            "                    <input id=\""+i+"\" class=\"zjfjk3 xzfjbj1 shuzi\" placeholder=\"输入房号\" name=\"houseelementname\">\n" +
             "                </div>\n" +
             "\n" +
             "            </div>"

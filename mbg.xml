@@ -56,7 +56,9 @@
         <!--<table tableName="instruction" domainObjectName="Instruction"></table>-->
         <!--<table tableName="phone_user_info" domainObjectName="PhoneUserInfo"></table>-->
         <!--<table tableName="admin_and_key" domainObjectName="AdminAndKey"></table>-->
-        <table tableName="daily_record_info" domainObjectName="DailyRecordInfo"></table>
+        <!--<table tableName="daily_record_info" domainObjectName="DailyRecordInfo"></table>-->
+        <!--<table tableName="renting" domainObjectName="Renting"></table>-->
+        <table tableName="fingerprint" domainObjectName="FingerPrint"></table>
 
 
 

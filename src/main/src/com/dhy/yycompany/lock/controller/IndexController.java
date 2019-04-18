@@ -8,7 +8,9 @@ import com.dhy.yycompany.lock.service.AdminService.AdministratorService;
 import com.dhy.yycompany.lock.service.ApartmentService.ApartmentService;
 import com.dhy.yycompany.lock.service.indexService.IndexService;
 import com.dhy.yycompany.lock.service.roomInfoService.RoomInfoService;
+import com.dhy.yycompany.lock.utils.AllChange;
 import com.dhy.yycompany.lock.utils.GetSessionUtil;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,12 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.io.File;
+import java.util.*;
 
 @Controller
 @RequestMapping("lock")
@@ -46,6 +47,7 @@ public class IndexController {
 
         HttpSession session = GetSessionUtil.getSession();
         int adminId = (int) session.getAttribute("adminId");
+        System.out.println("adminId="+adminId);
         //获得管理员信息
         JSON info = administratorServiceImpl.getInfo(adminId);
         String s = info.toJSONString();
@@ -135,10 +137,25 @@ public class IndexController {
     //增加管理员
     @RequestMapping("addOtherMessage")
     @ResponseBody
-    public JSON addOtherMessage(@RequestParam(value="img",required=false) MultipartFile img, @RequestParam("account") String account, @RequestParam("password") String password, @RequestParam("permission") int permission, @RequestParam("name") String name)
+    public JSON addOtherMessage(@RequestParam(value="file",required=false) MultipartFile img, @RequestParam("account") String account, @RequestParam("password") String password, @RequestParam("permission") int permission, @RequestParam("name") String name)
     {
+        // 原始名称
+        String originalFilename = img.getOriginalFilename();
+        CommonsMultipartFile cf= (CommonsMultipartFile)img;
+        DiskFileItem fi = (DiskFileItem)cf.getFileItem();
+        File f = fi.getStoreLocation();
+        System.out.println("Path="+f.getPath());
+        System.out.println("img="+originalFilename);
+        System.out.println("account="+account);
+        System.out.println("password="+password);
+        System.out.println("permission="+permission);
+        System.out.println("name="+name);
+        String path1 = System.getProperty("evan.webapp");
+        String  p=account+"\\tx\\tx0.png";
+        String p0=path1+"\\img\\data\\"+account+"\\tx";
+        AllChange.fileChannelCopy(f.getPath(),p0);
         Administrator administrator = new Administrator();
-        administrator.setAdminAvator("1.jpg");
+        administrator.setAdminAvator(p);
         administrator.setAdminAccount(account);
         administrator.setAdminPassword(password);
         administrator.setAdminPermission(permission);
@@ -150,6 +167,36 @@ public class IndexController {
         System.out.println("jsonObject="+jsonObject);
         return jsonObject;
     }
+
+
+    //接收图片来显示
+    @RequestMapping("getImg")
+    @ResponseBody
+    public JSON getImg(@RequestParam(value="file",required=false) MultipartFile img)
+    {
+        // 原始名称
+        String originalFilename = img.getOriginalFilename();
+        CommonsMultipartFile cf= (CommonsMultipartFile)img;
+        DiskFileItem fi = (DiskFileItem)cf.getFileItem();
+
+        File f = fi.getStoreLocation();
+
+
+        System.out.println("Path="+f.getPath());
+        System.out.println("img="+originalFilename);
+        String[] split = originalFilename.split("\\.");
+        Random rand = new Random();
+        int num = rand.nextInt(3)+1;
+        System.out.println(num);
+        String path1 = System.getProperty("evan.webapp");
+        String p=path1+"img\\tx\\"+num+".jpg";
+        AllChange.fileChannelCopy(f.getPath(),p);
+        Map<String, Object> stringObjectMap = new ModelMap();
+        stringObjectMap.put("result",num);
+        JSONObject json = new JSONObject(stringObjectMap);
+        return json;
+    }
+
 
     //增删房间卡片页面
     @RequestMapping("getRoomsNum")
@@ -245,4 +292,7 @@ public class IndexController {
         System.out.println("jsonObject="+jsonObject);
         return jsonObject;
     }
+
+
+
 }

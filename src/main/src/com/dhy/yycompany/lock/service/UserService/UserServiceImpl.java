@@ -1,8 +1,10 @@
 package com.dhy.yycompany.lock.service.UserService;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dhy.yycompany.lock.bean.*;
 import com.dhy.yycompany.lock.dao.*;
+import com.dhy.yycompany.lock.utils.GetTimeUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,8 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = new UserInfo();
         userInfo.setuId(userId);
         userInfo.setuDelete(1);
+        String time = GetTimeUtil.getTime();
+        userInfo.setuRetreatTime(time);
 
 
         //UserInfoMapper userInfoMapper=sqlSession.getMapper(UserInfoMapper.class);
@@ -154,7 +158,7 @@ public class UserServiceImpl implements UserService {
             }
         }else{
             map.put("result", 1);
-            map.put("message", "房间内没有住户，无法删除住户");
+            map.put("message", "房间内没有住户，无需退房");
         }
         map.put("result", 0);
         map.put("message", "删除所有用户成功");
@@ -172,14 +176,28 @@ public class UserServiceImpl implements UserService {
      * 4。添加用户指纹
      * 5。把指纹信息发送到树莓派端
      * 6。room表的人数字段加1
-     *
      */
     @Override
-    public Map<String,String> addHomeMaster(String account, int roomID, String name, String sex, String idCard, String phone, String stayTime, String retreatTime, String introduction) {
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        Map<String, String> map = new HashMap<String, String>();
+    public Map<String, Object> addHomeMaster(JSON json) {
+        //String account, int roomID, String name, String sex, String idCard, String phone, String stayTime, String retreatTime, String introduction
+        Map<String, Object> itemMap = JSONObject.toJavaObject(json, Map.class);
+        String account = itemMap.get("phone").toString();
+        //String openDoorpassword = itemMap.get("openDoorpassword").toString();
+        int roomID = Integer.parseInt((String)itemMap.get("roomID"));
+        String name = itemMap.get("name").toString();
+        String sex = itemMap.get("sex").toString();
+        String idCard = itemMap.get("idCard").toString();
+        String phone = itemMap.get("phone").toString();
+        String stayTime = itemMap.get("stayTime").toString();
+        String retreatTime = itemMap.get("retreatTime").toString();
+//        String introduction = itemMap.get("introduction").toString();
 
-        UserInfo u=new UserInfo();
+
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        UserInfo u = new UserInfo();
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         u.setuUuid(uuid);
         u.setuRoomId(roomID);
@@ -188,49 +206,272 @@ public class UserServiceImpl implements UserService {
         u.setuIdCard(idCard);
         u.setuPhone(phone);
         u.setuStayTime(stayTime);
-        u.setuRetreatTime(retreatTime);
-        u.setuIntroduction(introduction);
+        u.setuRetreatTime("");
+//        u.setuIntroduction(introduction);
         u.setuPrimaryUser(1);
         u.setuDelete(0);
         u.setuIsModify(0);
         //创建mapper
-        UserInfoMapper userInfoMapper=sqlSession.getMapper(UserInfoMapper.class);
+        UserInfoMapper userInfoMapper = sqlSession.getMapper(UserInfoMapper.class);
 
-        int num=userInfoMapper.insertUserReturnUId(u);
-        System.out.println("创建用户成功，userID="+u.getuId());
-        if(num==1){
-            //住户表中创建信息成功,下一步，把手机用户表中对应的用户的userid更新
-            PhoneUserInfoExample phoneUserInfoExample=new PhoneUserInfoExample();
-            PhoneUserInfoExample.Criteria criteria=phoneUserInfoExample.createCriteria();
-            criteria.andPAccountNumEqualTo(account);
-            PhoneUserInfo phoneUserInfo=new PhoneUserInfo();
-            phoneUserInfo.setpUId(u.getuId());
-            PhoneUserInfoMapper phoneUserInfoMapper=sqlSession.getMapper(PhoneUserInfoMapper.class);
-            int num1=phoneUserInfoMapper.updateByExampleSelective(phoneUserInfo,phoneUserInfoExample);
-            if(num1==1){
-                //手机用户表更新userID字段成功
-                System.out.println("手机用户表更新userID字段成功");
-                //对应的room房间人数加1
-                RoomMapper roomMapper=sqlSession.getMapper(RoomMapper.class);
-                int num2=roomMapper.insertUserByPrimaryKey(roomID);
-                if(num2==1){
-                    System.out.println("房间人数加1成功");
-                }else{
-                    map.put("result","1");
-                    map.put("message","房间人数加1失败");
+        int num = userInfoMapper.insertUserReturnUId(u);
+        System.out.println("创建用户成功，userID=" + u.getuId());
+        if (num == 1) {
+            //根据手机号码判断是否存在手机用户
+            PhoneUserInfoExample phoneUserInfoExample1 = new PhoneUserInfoExample();
+            PhoneUserInfoExample.Criteria criteria1 = phoneUserInfoExample1.createCriteria();
+            criteria1.andPAccountNumEqualTo(account);
+            PhoneUserInfoMapper phoneUserInfoMapper1 = sqlSession.getMapper(PhoneUserInfoMapper.class);
+            List<PhoneUserInfo> phoneUserInfos = phoneUserInfoMapper1.selectByExample(phoneUserInfoExample1);
+            if (phoneUserInfos != null && phoneUserInfos.size() == 1) {
+                //手机用户已经存在，把手机用户信息中的user_id进行修改
+                //住户表中创建信息成功,下一步，把手机用户表中对应的用户的userid更新
+                PhoneUserInfoExample phoneUserInfoExample = new PhoneUserInfoExample();
+                PhoneUserInfoExample.Criteria criteria = phoneUserInfoExample.createCriteria();
+                criteria.andPAccountNumEqualTo(account);
+                PhoneUserInfo phoneUserInfo = new PhoneUserInfo();
+                phoneUserInfo.setpUId(u.getuId());
+                PhoneUserInfoMapper phoneUserInfoMapper = sqlSession.getMapper(PhoneUserInfoMapper.class);
+                int num1 = phoneUserInfoMapper.updateByExampleSelective(phoneUserInfo, phoneUserInfoExample);
+                if (num1 == 1) {
+                    //手机用户表更新userID字段成功
+                    System.out.println("手机用户表更新userID字段成功");
+                    //对应的room房间人数加1
+                    RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
+                    int num2 = roomMapper.insertUserByPrimaryKey(roomID);
+                    if (num2 == 1) {
+
+                        Map<String, Object> map2 =rentingRoom(sqlSession,roomID,stayTime,retreatTime);
+                        if((int)map2.get("result")==0) {
+                            Map<String, Object> map3 = addUserKey(json, u.getuId());
+
+                            if((int)map2.get("result")==0)
+                            {
+                                System.out.println("房间人数加1成功");
+                                map.put("result", 0);
+                                map.put("message", "入住成功");
+                                map.put("userID", u.getuId());
+                            }
+                            else {
+                                System.out.println("增加密码失败");
+                                map.put("result", 6);
+                                map.put("message", "入住失败");
+                                sqlSession.close();
+                                return map;
+                            }
+                        }else {
+                            System.out.println("增加时间失败");
+                            map.put("result", 5);
+                            map.put("message", "入住失败");
+                            sqlSession.close();
+                            return map;
+                        }
+
+
+                    } else {
+                        System.out.println("房间人数加1失败");
+                        map.put("result", 1);
+                        map.put("message","入住失败" );
+                        sqlSession.close();
+                        return map;
+                    }
+                } else {
+                    System.out.println("在住户表中创建信息失败");
+                    map.put("result", 2);
+                    map.put("message", "入住失败");
+                    sqlSession.close();
+                    return map;
+                }
+            } else {
+                //手机用户不存在，创建手机用户
+                PhoneUserInfoMapper phoneUserInfoMapper = sqlSession.getMapper(PhoneUserInfoMapper.class);
+                PhoneUserInfo phoneUserInfo = new PhoneUserInfo();
+                phoneUserInfo.setpUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+                phoneUserInfo.setpUId(u.getuId());
+                phoneUserInfo.setpUserName(name);
+                phoneUserInfo.setpAccountNum(account);
+                phoneUserInfo.setpDelete(0);
+                phoneUserInfo.setpModify(0);
+                int num3 = phoneUserInfoMapper.insert(phoneUserInfo);
+                if (num3 == 1) {
+                    //对应的room房间人数加1
+                    RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
+                    int num2 = roomMapper.insertUserByPrimaryKey(roomID);
+                    if (num2 == 1) {
+
+                        Map<String, Object> map2 =rentingRoom(sqlSession,roomID,stayTime,retreatTime);
+                        if((int)map2.get("result")==0) {
+                            Map<String, Object> map3 = addUserKey(json, u.getuId());
+
+                            if((int)map2.get("result")==0)
+                            {
+                                System.out.println("房间人数加1成功");
+                                map.put("result", 0);
+                                map.put("message", "入住成功");
+                                map.put("userID", u.getuId());
+                            }
+                            else {
+                                System.out.println("增加密码失败");
+                                map.put("result", 6);
+                                map.put("message", "入住失败");
+                                sqlSession.close();
+                                return map;
+                            }
+                        }else {
+                            System.out.println("增加时间失败");
+                            map.put("result", 5);
+                            map.put("message", "入住失败");
+                            sqlSession.close();
+                            return map;
+                        }
+                    } else {
+                        System.out.println("房间人数加1失败");
+                        map.put("result", 3);
+                        map.put("message", "入住失败");
+                        sqlSession.close();
+                        return map;
+                    }
                 }
 
+            }
+        } else {
+            //住户表中创建信息失败
+            System.out.println("在住户表中创建信息失败");
+            map.put("result", 4);
+            map.put("message", "入住失败");
+            sqlSession.close();
+            return map;
+        }
+        sqlSession.close();
+        return map;
+    }
+
+//增加密码
+    public Map<String, Object> addUserKey(JSON json, int UserID) {
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> itemMap = JSONObject.toJavaObject(json, Map.class);
+        int roomID = Integer.parseInt((String)itemMap.get("roomID"));
+        RoomExample roomExample = new RoomExample();
+        RoomExample.Criteria criteria = roomExample.createCriteria();
+        criteria.andRIdEqualTo(roomID);
+        RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
+        List<Room> roomList = roomMapper.selectByExample(roomExample);
+        int lock_id = roomList.get(0).getrLockId();
+
+        KeyInfo keyInfo=new KeyInfo();
+        keyInfo.setkUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+        keyInfo.setkLockId(lock_id);
+        keyInfo.setkUserId(UserID);
+        String idCard = itemMap.get("idCard").toString();
+        String openDoorpassword=idCard.substring(idCard.length()-6);
+        System.out.println(openDoorpassword);
+        keyInfo.setkPassword(openDoorpassword);
+        keyInfo.setkAvailableTimes(-1);
+        keyInfo.setkIsModify(1);
+        keyInfo.setkDelete(0);
+        keyInfo.setkFailureTime("");
+
+        KeyInfoMapper keyInfoMapper=sqlSession.getMapper(KeyInfoMapper.class);
+        int num=keyInfoMapper.insert(keyInfo);
+        if(num==1){
+            //密码添加成功
+
+            Map<String, String> params = new HashMap<String, String>();
+            //查到数据，返回user用户数据，以json的形式
+            //System.out.println("=====================");
+            //System.out.println(keyInfo.getkPassword());
+            //System.out.println("=====================");
+            params.put("result", "ok");
+            params.put("method","addTempraryKey");
+            params.put("kPassword",keyInfo.getkPassword());
+            //params.put("kId","");
+            params.put("kUuid",keyInfo.getkUuid());
+            params.put("kFailureTime",keyInfo.getkFailureTime());
+            params.put("kAvailableTimes",keyInfo.getkAvailableTimes().toString());
+            params.put("kDelete",keyInfo.getkDelete().toString());
+            params.put("kIsModify",keyInfo.getkIsModify().toString());
+            params.put("kLockId",keyInfo.getkLockId().toString());
+            params.put("kUserId",keyInfo.getkUserId().toString());
+
+            String jsonString = JSONObject.toJSONString(params);
+
+            Instruction instruction=new Instruction();
+            //下面是指令对象赋值，要修改
+            instruction.setiUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+            instruction.setiLockId(lock_id);
+            instruction.setiUserId(UserID);
+            instruction.setiIsDelete(0);
+            instruction.setiIsModify(1);
+            instruction.setiIsFinger(0);
+            instruction.setiIsKey(1);
+            instruction.setiIsLock(0);
+            instruction.setiIsUser(0);
+            instruction.setiFingerInfo("");
+            instruction.setiKeyInfo(jsonString);
+            instruction.setiLockInfo("");
+            instruction.setiUserInfo("");
+            InstructionMapper instructionMapper=sqlSession.getMapper(InstructionMapper.class);
+            num=instructionMapper.insert(instruction);
+            if(num==1){
+                map.put("result", 0);
+                map.put("message", "添加密码成功");
             }else{
-                map.put("result","1");
-                map.put("message","在住户表中创建信息失败");
+                map.put("result", 1);
+                map.put("message", "添加密码失败");
+            }
+
+            //System.out.println("insert into instruction "+num);
+        }else {
+            map.put("result", 1);
+            map.put("message", "添加密码失败");
+        }
+        sqlSession.close();
+        return map;
+    }
+
+//入住时间操作
+    public Map<String, Object> rentingRoom( SqlSession sqlSession,int roomID, String rentTime, String retreatTime) {
+        RentingExample rentingExample = new RentingExample();
+        RentingExample.Criteria criteria=rentingExample.createCriteria();
+        criteria.andRoomIdEqualTo(roomID);
+        RentingMapper rentingMapper=sqlSession.getMapper(RentingMapper.class);
+        List<Renting> rentings=rentingMapper.selectByExample(rentingExample);
+        System.out.println(rentings.size());
+        Map<String,Object> map=new HashMap<>();
+        if(rentings!=null && rentings.size()!=0){
+            //有该房间的信息
+            Renting renting=new Renting();
+            renting.setRoomId(roomID);
+            renting.setRentTime(rentTime);
+            renting.setRetreatTime(retreatTime);
+            RentingExample rentingExample1 = new RentingExample();
+            RentingExample.Criteria criteria1=rentingExample1.createCriteria();
+            criteria1.andRoomIdEqualTo(roomID);
+            int result=rentingMapper.updateByExampleSelective(renting,rentingExample1);
+            if(result==1){
+                map.put("result",0);
+                map.put("detail","修改renting表信息成功");
+            }else{
+                map.put("result",1);
+                map.put("detail","修改renting表信息失败");
             }
         }else{
-            //住户表中创建信息失败
-            map.put("result","1");
-            map.put("message","在住户表中创建信息失败");
+            //没有该房间的信息
+            Renting renting=new Renting();
+            renting.setRoomId(roomID);
+            renting.setRentTime(rentTime);
+            renting.setRetreatTime(retreatTime);
+            int result=rentingMapper.insertSelective(renting);
+            if(result==1){
+                map.put("result",0);
+                map.put("detail","添加renting表信息成功");
+            }else{
+                map.put("result",1);
+                map.put("detail","添加renting表信息失败");
+            }
         }
-        sqlSession.commit();
-        sqlSession.close();
         return map;
     }
 

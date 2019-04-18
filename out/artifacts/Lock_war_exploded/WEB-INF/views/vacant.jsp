@@ -25,6 +25,7 @@
     <script type="text/javascript" src="../../js/fingerprint.js"></script>
     <script type="text/javascript" src="../../js/public.js"></script>
     <script type="text/javascript" src="../../js/tc.js"></script>
+    <script type="text/javascript" src="../../js/input.js"></script>
 
 </head>
 <body>
@@ -85,11 +86,13 @@
 
                             <div class="message3s">
                                 <div class="message3 ke">
-                                    <label class="border-input">租聘时间:</label><input  id="kaishi" class="form-control border-input" type="date"><HR class="border-input" align=center width=5% color=#0000 SIZE=2 style="margin-top: 10px; margin-left: 8px;  "><input  id="jieshu" class="form-control border-input" type="date">
+                                    <label class="border-input">租聘时间:</label><input  id="kaishi" class="form-control border-input" type="date" value=""><HR class="border-input" align=center width=5% color=#0000 SIZE=2 style="margin-top: 10px; margin-left: 8px;  "><input  id="jieshu" class="form-control border-input" type="date">
                                     <br/>
-                                    <br/>
+                                    <%--<br/>--%>
 
-                                    <label >居住人数:</label><input 54  class="form-control"></input>
+                                    <%--<label >居住人数:</label><input 54  class="form-control"></input>--%>
+
+
                                 </div>
 
                                 <div class="message3 ke">
@@ -135,19 +138,18 @@
 
 
                                 <div  class="message31 ke">
-                                    <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</label><input  name="name0" class="form-control" type="text" >
+                                    <label>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</label><input   id="name0" class="form-control" type="text" >
                                     <br/>
                                     <br/>
-                                    <label>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</label><input  name="sex0" class="form-control" type="text" >
+                                    <label>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</label>
+                                    <label class="form-control"><input name="sex" type="radio" value="1" />男 </label>
+                                    <label class="form-control"><input name="sex" type="radio" value="0" />女 </label>
                                     <br/>
                                     <br/>
-                                    <label>手&nbsp;&nbsp;机&nbsp;&nbsp;号：</label><input  name="phone0" class="form-control" type="text" >
+                                    <label>手&nbsp;&nbsp;机&nbsp;&nbsp;号：</label><input  id="phone0" class="form-control shuzi" type="text" >
                                     <br/><br/>
-                                    <label>入住时间：</label><input  name="time0" class="form-control" type="text" >
-                                    <br/>
-                                    <br/>
-                                    <label>身份证号：</label><input  name="sfz0" class="form-control" type="text">
-                                    <div id="confirm" class="bd confirm" onclick="ruzhupopBox()">确认入住</div>
+                                    <label>身份证号：</label><input  id="sfz0" class="form-control shuzi" type="text">
+                                    <div id="confirm" class="bd confirm" onclick="rz()">确认入住</div>
                                 </div>
                                 <%--<div id="order" class="order ke">--%>
 
@@ -180,12 +182,12 @@
                 </a>
             </div>
             <div class="main_date">
-                <a href="#">1月27日星期日</a>
+                <a id="date" href="#">1月27日星期日</a>
             </div>
         </div>
         <div class="portrait" onmousemove="popBox2()"  onmouseout="closeBox2()">
             <a href="#" on>
-                <div class="tx"><img class="tp" src="../../img/tx1.jpg"></div>
+                <div class="tx"><img id="txxs" class="tp" src=""></div>
 
             </a>
             <!--角色详细信息弹窗-->
@@ -193,16 +195,16 @@
                 <div class="content2">
                     <h4 class="toubt">管理员信息</h4>
                     <div class="wk">
-                        <div  class="jz jz1"><label class="nr left">昵称：</label><div  class="nr xx left">琥珀川小黑</div></div>
+                        <div  class="jz jz1"><label class="nr left">昵称：</label><div id="nc"  class="nr xx left"></div></div>
                         <br/>
-                        <div class="jz jz2"><label class="nr left">信息：</label><div class="nr xx left">无</div></div>
+                        <div class="jz jz2"><label class="nr left">信息：</label><div id="xx" class="nr xx left">无</div></div>
                         <br/>
-                        <div class="jz jz2"><label class="nr left">权限：</label><div class="nr xx left">一级权限</div></div>
+                        <div class="jz jz2"><label class="nr left">权限：</label><div id="qx" class="nr xx left"></div></div>
                     </div>
 
                 </div>
                 <HR align=center width=100% color=#ccc SIZE=2>
-                <div  ><div  class="xm mmxg" onclick="glypopBox()">管理员管理</div><div class="xm tc">退出</div></div>
+                <div  ><div  class="xm mmxg" onclick="glypopBox()">管理员管理</div><a href="/lock/login"><div  class="xm tc">退出</div></a></div>
 
             </div>
 
@@ -316,10 +318,12 @@
             <br/>
 
             <div style="text-align:center; ">
-                <label style="text-align:center;">
-                    <input  style="position:absolute; width: 60px;height: 60px; opacity:0; text-align:center; cursor: pointer;" type="file" name="file" id="Album_img" accept="image/gif,image/jpeg,image/x-png"/>
-                    <img  style="display: inline; width: 60px;height: 60px; text-align:center;" src="../../img/head.jpg">
-                </label>
+                <form id="form1" enctype="multipart/form-data">
+                    <label style="text-align:center;">
+                        <input onchange="sc()"  style="position:absolute; width: 60px;height: 60px; opacity:0; text-align:center; cursor: pointer;" type="file" name="file" id="Album_img" accept="image/gif,image/jpeg,image/x-png"/>
+                        <img id="tpzs" class="tp"  style="display: inline; width: 60px;height: 60px; text-align:center;" src="../../img/tx/tx0.jpg">
+                    </label>
+                </form>
             </div>
             <br/>
             <div ><label>账号：</label><input  id="account2" class="form-control" type="text" value=""></div>
@@ -348,7 +352,7 @@
     <div class="content">
         <h4>修改租金</h4>
         <div id="xgzjRoomId" style="display: none;">${requestScope.roomX.rId}</div>
-        <div class="zj"><label>租金：</label><input  id="zjinput" class="form-control" type="text" value="${requestScope.roomX.rPrice}"></div>
+        <div class="zj"><label>租金：</label><input  id="zjinput" class="form-control shuzi" type="text" value="${requestScope.roomX.rPrice}"></div>
         <br/>
 
 
@@ -359,16 +363,18 @@
 
 
 
-<!--登录-->
+<!--指纹录入-->
 <div id="ruzhupopBox" class="popBox ke">
+    <div id="lockId" style="display: none;"></div>
     <div class="close">
-        <a id="gb" href="javascript:void(0)" onclick="" class="iconfont">&#xe613;</a>
+        <a href="javascript:void(0)" onclick="ruzhucloseBox()" class="iconfont">&#xe613;</a>
     </div>
     <div class="content">
         <h4>现在进行指纹录入</h4>
         <img id="content" style="display:inline;" class="avatar" src="../../img/zw.gif" alt="..."/>
+        <div id="ts"></div>
     </div>
-    <div id="ks"><div id="b3" class="bd xyb finger">开始</div></div>
+    <div id="ks"   class="bd xyb finger">开始</div>
 
 </div>
 
@@ -382,7 +388,7 @@
     <div class="content">
         <h4>绑定门锁</h4>
         <div id="bdmsRoomId" style="display: none;">${requestScope.roomX.rId}</div>
-        <div class="zj"><label>设备号：</label><input  id="bdmssbh" class="form-control" type="text" value="${requestScope.roomX.rPrice}"></div>
+        <div class="zj"><label>设备号：</label><input  id="bdmssbh" class="form-control" type="text" value=""></div>
         <br/>
 
 

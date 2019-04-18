@@ -209,6 +209,7 @@ public class AdministratorServiceImpl implements AdministratorService {
 
     public Map<String,Object> addInfo(Administrator administrator)
     {
+
         SqlSession sqlSession = sqlSessionFactory.openSession();
         AdministratorMapper administratorMapper = sqlSession.getMapper(AdministratorMapper.class);
         AdministratorExample administratorExample = new AdministratorExample();
@@ -219,7 +220,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         if(administrators.size()==0)
         {
             int i = administratorMapper.insertSelective(administrator);
-            if(i==1)
+            if(i!=0)
             {
                 KeyAndAdminMapper keyAndAdminMapper = sqlSession.getMapper(KeyAndAdminMapper.class);
                 KeyAndAdmin keyAndAdmin = new KeyAndAdmin();

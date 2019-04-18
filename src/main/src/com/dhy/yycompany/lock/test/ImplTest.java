@@ -1,6 +1,8 @@
 package com.dhy.yycompany.lock.test;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.dhy.yycompany.lock.bean.Administrator;
 import com.dhy.yycompany.lock.service.AdminService.AdministratorService;
 import com.dhy.yycompany.lock.service.ApartmentService.ApartmentService;
 import com.dhy.yycompany.lock.service.LockService.LockService;
@@ -17,10 +19,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ImplTest {
     @Test
@@ -103,6 +102,23 @@ public class ImplTest {
         LockService lockServiceImpl = (LockService) context.getBean("lockServiceImpl");
         JSON allKeyByLockId = lockServiceImpl.getOpenRecord(2, 1);
         System.out.println(allKeyByLockId);
+    }
+
+    @Test
+    public void addInfo(){
+        ApplicationContext context=new ClassPathXmlApplicationContext("applicationContext.xml");
+        AdministratorService administratorServiceImpl = (AdministratorService) context.getBean("administratorServiceImpl");
+        Administrator administrator = new Administrator();
+        administrator.setAdminAvator("1.jpg");
+        administrator.setAdminAccount("ceshi1");
+        administrator.setAdminPassword("123456");
+        administrator.setAdminPermission(2);
+        administrator.setAdminName("ceshiyuan");
+        String s = UUID.randomUUID().toString().replaceAll("-", "");
+        administrator.setAdminUuid(s);
+        Map<String, Object> stringObjectMap = administratorServiceImpl.addInfo(administrator);
+        JSONObject json = new JSONObject(stringObjectMap);
+        System.out.println(json);
     }
 
 

@@ -116,7 +116,7 @@
       #{adminAddress,jdbcType=VARCHAR}, #{adminAccount,jdbcType=VARCHAR}, #{adminPassword,jdbcType=VARCHAR}, 
       #{adminModify,jdbcType=INTEGER}, #{adminDelete,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.dhy.yycompany.lock.bean.Administrator">
+  <insert id="insertSelective" parameterType="com.dhy.yycompany.lock.bean.Administrator" useGeneratedKeys="true" keyProperty="adminId">
     insert into administrator
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="adminId != null">

@@ -3,6 +3,7 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="com.dhy.yycompany.lock.bean.Room" %>
+<%@ page import="com.dhy.yycompany.lock.utils.GetSessionUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page isELIgnored="false" %>
@@ -10,6 +11,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <%
+        response.setHeader("Pragma","No-cache");
+        response.setHeader("Cache-Control","No-cache");
+        response.setDateHeader("Expires", -1);
+        response.setHeader("Cache-Control", "No-store");
+    %>
+
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 <title>gy公寓</title>
 <link rel="stylesheet" href="../../css/tou.css">
     <link rel="stylesheet" href="../../css/iconfont.css">
@@ -25,10 +36,10 @@
     <script type="text/javascript" src="../../js/index.js"></script>
     <script type="text/javascript" src="../../js/public.js"></script>
     <script type="text/javascript" src="../../js/tc.js"></script>
+    <script type="text/javascript" src="../../js/input.js"></script>
 </head>
 
 <body >
-
 
 <!--主体-->
 <div class="mair n_xia" style="min-height:100%;">
@@ -60,7 +71,9 @@
             <div>
              <%
              List<Map<String, Object>> rooms = (List<Map<String, Object>>) request.getAttribute("rooms");
-             for (int i=0;i<rooms.size();i++)
+                 HttpSession session0= GetSessionUtil.getSession();
+                 String username = (String) session0.getAttribute("username");
+                 for (int i=0;i<rooms.size();i++)
              {
                  Map<String, Object> stringObjectMap = rooms.get(i);
                  String apartmentID = (String) stringObjectMap.get("ApartmentID");//公寓id
@@ -206,12 +219,12 @@
             </a>
         </div>
         <div class="main_date">
-            <a href="#">1月27日星期日</a>
+            <a id="date" href="#">1月27日星期日</a>
         </div>
     </div>
     <div class="portrait" onmousemove="popBox2()"  onmouseout="closeBox2()">
         <a href="#" on>
-            <div class="tx"><img class="tp" src="../../img/tx1.jpg"></div>
+            <div class="tx"><img id="txxs" class="tp" src=""></div>
 
         </a>
         <!--角色详细信息弹窗-->
@@ -219,16 +232,17 @@
             <div class="content2">
                 <h4 class="toubt">管理员信息</h4>
                 <div class="wk">
-                    <div  class="jz jz1"><label class="nr left">昵称：</label><div  class="nr xx left">琥珀川小黑</div></div>
+                    <div  class="jz jz1"><label class="nr left">昵称：</label><div id="nc"  class="nr xx left"></div></div>
                     <br/>
-                    <div class="jz jz2"><label class="nr left">信息：</label><div class="nr xx left">无</div></div>
+                    <div class="jz jz2"><label class="nr left">信息：</label><div id="xx" class="nr xx left">无</div></div>
                     <br/>
-                    <div class="jz jz2"><label class="nr left">权限：</label><div class="nr xx left">一级权限</div></div>
+                    <div class="jz jz2"><label class="nr left">权限：</label><div id="qx" class="nr xx left"></div></div>
                 </div>
 
             </div>
             <HR align=center width=100% color=#ccc SIZE=2>
-            <div  ><div  class="xm mmxg" onclick="glypopBox()">管理员管理</div><div class="xm tc">退出</div></div>
+            <div  ><div  class="xm mmxg" onclick="glypopBox()">管理员管理</div><a href="/lock/login"><div  class="xm tc">退出</div></a></div>
+
 
         </div>
 
@@ -342,10 +356,12 @@
         <br/>
 
         <div style="text-align:center; ">
-            <label style="text-align:center;">
-                <input  style="position:absolute; width: 60px;height: 60px; opacity:0; text-align:center; cursor: pointer;" type="file" name="file" id="Album_img" accept="image/gif,image/jpeg,image/x-png"/>
-                <img  style="display: inline; width: 60px;height: 60px; text-align:center;" src="../../img/head.jpg">
-            </label>
+            <form id="form1" enctype="multipart/form-data">
+                    <label style="text-align:center;">
+                        <input onchange="sc()"  style="position:absolute; width: 60px;height: 60px; opacity:0; text-align:center; cursor: pointer;" type="file" name="file" id="Album_img" accept="image/gif,image/jpeg,image/x-png"/>
+                        <img id="tpzs" class="tp"  style="display: inline; width: 60px;height: 60px; text-align:center;" src="../../img/tx/tx0.jpg">
+                    </label>
+            </form>
         </div>
         <br/>
         <div ><label>账号：</label><input  id="account2" class="form-control" type="text" value=""></div>
@@ -360,8 +376,9 @@
         <br/>
         <div ><label>姓名：</label><input  id="name2" class="form-control" type="text" value=""></div>
         <br/>
+
     </div>
-    <div onclick="addMyMessage()" class="gb"><div id="b22" class="bd xyb finger">确认</div></div>
+    <div id="qdt" onclick="addMyMessage()" class="gb"><div id="b22" class="bd xyb finger">确认</div></div>
 
 </div>
 
