@@ -37,8 +37,9 @@
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/public.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="../../js/index.js"></script>
     <script type="text/javascript" src="../../js/public.js"></script>
+    <script type="text/javascript" src="../../js/index.js"></script>
+
     <script type="text/javascript" src="../../js/tc.js"></script>
     <script type="text/javascript" src="../../js/input.js"></script>
 </head>

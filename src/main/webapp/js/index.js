@@ -152,6 +152,7 @@ function delectRoom(roomId){
 }
 
 $(function() {
+    account();//查询是否以登录；
     var n=1;
 
     //添加房间前端

@@ -6,6 +6,7 @@ import com.dhy.yycompany.lock.bean.RoomX;
 import com.dhy.yycompany.lock.service.FingerService.FingerPrintService;
 import com.dhy.yycompany.lock.service.UserService.UserService;
 import com.dhy.yycompany.lock.service.roomInfoService.RoomInfoService;
+import com.dhy.yycompany.lock.utils.GetSessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Controller
@@ -30,6 +32,13 @@ public class VacantController {
     @RequestMapping("vacant")
     public String vacant(@RequestParam("roomId") int roomId, ModelMap mod)
     {
+        try {
+            HttpSession session = GetSessionUtil.getSession();
+            int adminId = (int) session.getAttribute("adminId");
+        }catch (Exception e)
+        {
+            return "redirect:/lock/hint ";
+        }
         Map<String, Object> roomInfo = roomInfoServiceImpl.getRoomInfo(roomId);
         System.out.println("key");
         RoomX roomX = (RoomX) roomInfo.get("roomX");

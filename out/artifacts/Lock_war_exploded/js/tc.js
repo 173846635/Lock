@@ -140,6 +140,7 @@ function tfcloseBox() {
 
 $(function() {
 
+
     // //新建门锁密码
     // $(document).on("click",".gb",function() {
     //
@@ -149,3 +150,4 @@ $(function() {
     // })
 
 })
+

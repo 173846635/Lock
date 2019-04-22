@@ -10,7 +10,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="../../img/apple-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../img/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%
         response.setHeader("Pragma","No-cache");
         response.setHeader("Cache-Control","No-cache");
@@ -21,7 +24,8 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta http-equiv="Expires" content="0">
-<title>gy公寓</title>
+    <title>居锁--公寓管理</title>
+
 <link rel="stylesheet" href="../../css/tou.css">
     <link rel="stylesheet" href="../../css/iconfont.css">
     <link rel="stylesheet" href="../../css/leftNavigation.css">
@@ -33,8 +37,9 @@
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/public.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="../../js/index.js"></script>
     <script type="text/javascript" src="../../js/public.js"></script>
+    <script type="text/javascript" src="../../js/index.js"></script>
+
     <script type="text/javascript" src="../../js/tc.js"></script>
     <script type="text/javascript" src="../../js/input.js"></script>
 </head>

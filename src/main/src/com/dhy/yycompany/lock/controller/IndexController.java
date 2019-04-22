@@ -45,6 +45,13 @@ public class IndexController {
     {
         System.out.println("index");
 
+        try {
+            HttpSession session = GetSessionUtil.getSession();
+            int adminId = (int) session.getAttribute("adminId");
+        }catch (Exception e)
+        {
+            return "redirect:/lock/hint ";
+        }
         HttpSession session = GetSessionUtil.getSession();
         int adminId = (int) session.getAttribute("adminId");
         System.out.println("adminId="+adminId);

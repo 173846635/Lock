@@ -39,6 +39,13 @@ public class keyController {
      */
     @RequestMapping("information/key")
     public String toKey(@RequestParam("roomId") int roomId, ModelMap mod){
+        try {
+            HttpSession session = GetSessionUtil.getSession();
+            int adminId = (int) session.getAttribute("adminId");
+        }catch (Exception e)
+        {
+            return "redirect:/lock/hint ";
+        }
         Map<String, Object> roomInfo = roomInfoServiceImpl.getRoomInfo(roomId);
         System.out.println("key");
         RoomX roomX = (RoomX) roomInfo.get("roomX");

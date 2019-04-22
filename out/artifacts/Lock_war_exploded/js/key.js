@@ -289,6 +289,7 @@ function xjmm(){
 }
 
 $(function() {
+    account();//查询是否以登录；
     lockMessage()//获得lock信息
     getAllKey("shouye_mm");//获取本锁所有密码
 

@@ -671,11 +671,30 @@ function sc(){
 //
 //     echo json_encode($response);
 // }
+function account(){
+    console.log("accccccccccccc");
+    $.ajax({
+        url: '/lock/account',
+        type: 'POST',
+        data:jsona,
+        dataType: 'json',
+        async: true,
+        success:function(data){
+            console.log(data)
+            if(data["result"]==-1)
+            {
+                window.location.replace("/lock/hint");
+                bdmscloseBox();
+            }
+        }
+    })
+}
 
 
 
 //公共读取
 $(function() {
+    account();//查询是否以登录；
     //获取本人信息
     getmyMessage()
     //获取其他管理员信息

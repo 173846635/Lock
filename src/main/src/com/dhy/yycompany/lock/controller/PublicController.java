@@ -7,11 +7,13 @@ import com.dhy.yycompany.lock.service.roomInfoService.RoomInfoService;
 import com.dhy.yycompany.lock.utils.GetSessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -23,6 +25,8 @@ public class PublicController {
 
     @Autowired
     private RoomInfoService roomInfoServiceImpl;
+
+
 
     //开门
     @RequestMapping(value = {"open"})
@@ -46,5 +50,34 @@ public class PublicController {
         JSON jsonObject = new JSONObject(stringObjectMap);
         System.out.println("jsonObject="+jsonObject);
         return jsonObject;
+    }
+
+
+    //查询是否以登录
+    @RequestMapping(value = {"account"})
+    @ResponseBody
+    public JSON account()
+    {
+        HttpSession session = GetSessionUtil.getSession();
+        Map<String, Object> map = new HashMap<>();
+
+        try {
+            int userId = (int) session.getAttribute("userId");
+        }catch (Exception e)
+        {
+            System.out.println("未登录");
+            map.put("result",-1);
+            JSON jsonObject = new JSONObject(map);
+            return jsonObject;
+        }
+        System.out.println("已登录");
+        map.put("result",0);
+        JSON jsonObject = new JSONObject(map);
+        return jsonObject;
+    }
+
+    @RequestMapping("hint")
+    public String toKey(){
+        return "hint.html";
     }
 }

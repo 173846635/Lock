@@ -46,9 +46,12 @@ public class IndexServiceImpl implements IndexService {
 
 
         //传给前端的list
-        List<Map<String, Object>> listMap = new ArrayList<>();//楼list,有几幢楼，就创建几个map元素
+        List<Map<String, Object>> listMap = new ArrayList<>();//楼list,有几幢楼（有几个公寓ID），就创建几个map元素
+
         Map<Integer, String> apartmentMap = new HashMap<>();//公寓id:公寓名字
+
         List<Integer> apartmentIDList = new ArrayList<>();//未删除公寓的所有id list
+
         if (apartmentList != null && apartmentList.size() != 0) {
             for (int i = 0; i < apartmentList.size(); i++) {
                 System.out.println("apartment===");
@@ -70,6 +73,7 @@ public class IndexServiceImpl implements IndexService {
             roomExample.setOrderByClause("r_apartment_id asc,r_floor asc");
             RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
             List<Room> roomList = roomMapper.selectByExample(roomExample);
+            System.out.println("roomlist");
             System.out.println(roomList);
 
             if (roomList != null && roomList.size() != 0) {
@@ -77,16 +81,27 @@ public class IndexServiceImpl implements IndexService {
                 int emptyRooms = 0;
                 int apartment_id = roomList.get(0).getrApartmentId();
                 int rFloor = roomList.get(0).getrFloor();
-                Map<String, Object> mapFloor = new HashMap<>();
+                Map<String, Object> mapFloor = new TreeMap<String, Object>(
+                        new Comparator<String>() {
+                            public int compare(String obj1, String obj2) {
+                                // 降序排序
+                                if(Integer.parseInt(obj1)<Integer.parseInt(obj2)){
+                                    return -1;
+                                }else if(Integer.parseInt(obj1)>Integer.parseInt(obj2)){
+                                    return 1;
+                                }else{
+                                    return 0;
+                                }
+                            }
+                        });
                 for (int i = 0; i < roomList.size(); i++) {
                     //判断是否是一个公寓的房间
                     if (apartment_id == roomList.get(i).getrApartmentId()) {
-                        if (roomList.get(i).getrResidentNum() == 0&&!roomList.get(i).getrNum().equals("-1")) {
+                        if (roomList.get(i).getrResidentNum() == 0) {
                             emptyRooms++;
                         }
                         //把一层楼的房间放到一个list里，存入mapFloor中
                         if (rFloor == roomList.get(i).getrFloor()) {
-                            System.out.println("rNum="+roomList.get(i).getrNum());
                             //把房间加入楼层list
                             sameFloorRooms.add(roomList.get(i));
                         } else {
@@ -103,6 +118,7 @@ public class IndexServiceImpl implements IndexService {
                                     return 1;
                                 }
                             });
+
                             System.out.println("8888888");
                             System.out.println(sameFloorRooms);
                             //把一层楼的房间按照房间号排序后，放到mapFloor中。
@@ -133,6 +149,24 @@ public class IndexServiceImpl implements IndexService {
                         rFloor = roomList.get(i).getrFloor();
 
 
+
+                        //把mapFloor进行关于键的排序
+
+//                        Object[] key_arr = mapFloor.keySet().toArray();
+//                        Arrays.sort(key_arr);
+//                        for  (Object key : key_arr) {
+//                            int kk=(int)key;
+//                            int vv=mapFloor.get(key);
+//                            if(kk<vv){
+//                                System.out.println(key);
+//                            }
+//                        }
+
+
+
+
+
+
                         //添加一个公寓楼的map
                         Map<String, Object> map = new HashMap<>();
                         map.put("ApartmentID", String.valueOf(apartment_id));
@@ -147,11 +181,31 @@ public class IndexServiceImpl implements IndexService {
                         if (roomList.get(i).getrResidentNum() == 0) {
                             emptyRooms++;
                         }
-                        mapFloor = new HashMap<>();
+                        mapFloor =  new TreeMap<String, Object>(
+                                new Comparator<String>() {
+                                    public int compare(String obj1, String obj2) {
+                                        // 降序排序
+                                        if(Integer.parseInt(obj1)<Integer.parseInt(obj2)){
+                                            return -1;
+                                        }else if(Integer.parseInt(obj1)>Integer.parseInt(obj2)){
+                                            return 1;
+                                        }else{
+                                            return 0;
+                                        }
+                                    }
+                                });
                         apartment_id = roomList.get(i).getrApartmentId();
 
                     }
                 }
+
+
+
+
+
+
+
+
                 //公寓楼发生变化，所有房间楼层发生了改变,把当前楼层的房间按照房间号排序
                 Collections.sort(sameFloorRooms, new Comparator<Room>() {
                     @Override
@@ -174,8 +228,95 @@ public class IndexServiceImpl implements IndexService {
                 map.put("EmptyRooms", String.valueOf(emptyRooms));
                 map.put("Rooms", mapFloor);
                 listMap.add(map);
+//                sameFloorRooms=new ArrayList<>();
+//                emptyRooms=0;
+//                mapFloor=new HashMap<>();
+//                apartment_id = roomList.get(i).getrApartmentId();
             }
-
+//            if (roomList != null && roomList.size() != 0) {
+//                int emptyRooms=0;
+//                List<Room> miniList = new ArrayList<>();
+//                List<Room> floorList=new ArrayList<>();
+//                int apartment_id = roomList.get(0).getrApartmentId();
+//                int rFloor = roomList.get(0).getrFloor();
+//                for (int i = 0; i < roomList.size(); i++) {
+//                    if (apartment_id == roomList.get(i).getrApartmentId()) {
+//                        if(rFloor!=roomList.get(i).getrFloor()){
+//                            //房间楼层发生了改变,把当前楼层的房间按照房间号排序
+//                            Collections.sort(floorList, new Comparator<Room>() {
+//                                @Override
+//                                public int compare(Room o1, Room o2) {
+//// TODO Auto-generated method stub
+//                                    if (o1.getrNumInt() < o2.getrNumInt()) {
+//                                        return -1;
+//                                    }
+//                                    if (o1.getrNumInt() == o2.getrNumInt())
+//                                        return 0;
+//                                    return 1;
+//                                }
+//                            });
+//
+//
+//                        }else{
+//                            floorList.add(roomList.get(i));
+//                        }
+//
+//                        miniList.add(roomList.get(i));
+//                        if(roomList.get(i).getrResidentNum()==0){
+//                            emptyRooms++;
+//                        }
+//                    } else {
+//                        Map<String, Object> map = new HashMap<>();
+//                        map.put("ApartmentID", String.valueOf(apartment_id));
+//                        map.put("ApartmentName", apartmentMap.get(apartment_id));
+//
+//
+//                        Collections.sort(miniList, new Comparator<Room>() {
+//                            @Override
+//                            public int compare(Room o1, Room o2) {
+//// TODO Auto-generated method stub
+//                                if (o1.getrNumInt() < o2.getrNumInt()) {
+//                                    return -1;
+//                                }
+//                                if (o1.getrNumInt() == o2.getrNumInt())
+//                                    return 0;
+//                                return 1;
+//                            }
+//                        });
+//
+//                        map.put("Rooms", miniList);
+//                        map.put("EmptyRooms", String.valueOf(emptyRooms));
+//                        emptyRooms=0;
+//                        listMap.add(map);
+//                        miniList = new ArrayList<>();
+//                        miniList.add(roomList.get(i));
+//                        apartment_id = roomList.get(i).getrApartmentId();//新的apartment_id
+//                    }
+//                    System.out.println("roomlist===");
+//                    System.out.println(roomList.get(i));
+//                }
+//
+//                Map<String, Object> map = new HashMap<>();
+//                map.put("ApartmentID", String.valueOf(apartment_id));
+//                map.put("ApartmentName", apartmentMap.get(apartment_id));
+//                Collections.sort(miniList, new Comparator<Room>() {
+//
+//                    @Override
+//                    public int compare(Room o1, Room o2) {
+//// TODO Auto-generated method stub
+//                        if (o1.getrNumInt() < o2.getrNumInt()) {
+//                            return -1;
+//                        }
+//                        if (o1.getrNumInt() == o2.getrNumInt())
+//                            return 0;
+//                        return 1;
+//                    }
+//                });
+//                map.put("Rooms", miniList);
+//                map.put("EmptyRooms", String.valueOf(emptyRooms));
+//                emptyRooms=0;
+//                listMap.add(map);
+//            }
         }
 
         JSON toJSON = (JSON) JSONArray.toJSON(listMap); // List转json

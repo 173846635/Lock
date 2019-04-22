@@ -192,7 +192,7 @@ function dateX(){
 
 
 $(function() {
-
+    account();//查询是否以登录；
     dateX();
 var b=2;
 //结束
