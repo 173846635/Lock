@@ -141,6 +141,7 @@ public class UserServiceImpl implements UserService {
         UserInfoExample userInfoExample=new UserInfoExample();
         UserInfoExample.Criteria criteria=userInfoExample.createCriteria();
         criteria.andURoomIdEqualTo(roomId);
+        criteria.andUDeleteEqualTo(0);
         SqlSession sqlSession=sqlSessionFactory.openSession();
         UserInfoMapper userInfoMapper=sqlSession.getMapper(UserInfoMapper.class);
         List<UserInfo> userInfos=userInfoMapper.selectByExample(userInfoExample);
@@ -290,6 +291,7 @@ public class UserServiceImpl implements UserService {
                 phoneUserInfo.setpUId(u.getuId());
                 phoneUserInfo.setpUserName(name);
                 phoneUserInfo.setpAccountNum(account);
+                phoneUserInfo.setpPassword("123456");
                 phoneUserInfo.setpDelete(0);
                 phoneUserInfo.setpModify(0);
                 int num3 = phoneUserInfoMapper.insert(phoneUserInfo);

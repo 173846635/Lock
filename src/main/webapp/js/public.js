@@ -694,7 +694,6 @@ function account(){
 
 //公共读取
 $(function() {
-    account();//查询是否以登录；
     //获取本人信息
     getmyMessage()
     //获取其他管理员信息

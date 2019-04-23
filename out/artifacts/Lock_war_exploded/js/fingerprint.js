@@ -57,8 +57,9 @@ function zwlr(process,userId) {
                     console.log("创建指纹文件成功");
                     $('#ts').text("创建指纹文件成功");
                     $('#ts').attr("name",4);
-                    $("#qx").text("完成")
-                    $("#qx").attr("id","gb");
+                    $('#qx1').empty();
+                    $('#qx1').append("完成");
+                    $('#qx1').attr("id","gb");
                     break;
                 case -1:
                     console.log("第一次指纹录入失败");
@@ -192,7 +193,7 @@ function dateX(){
 
 
 $(function() {
-    account();//查询是否以登录；
+
     dateX();
 var b=2;
 //结束
@@ -206,24 +207,17 @@ var b=2;
     $(document).on("click","#ks",function() {
         console.log("ks")
         $(this).text("取消")
-        $(this).attr("id","qx");
+        $(this).attr("id","qx1");
         var userId=$('#lockId').text();
         zwlr(0,userId)
     })
     //取消
-    $(document).on("click","#qx",function() {
-        console.log("qx")
+    $(document).on("click","#qx1",function() {
+        console.log("qx1")
         $(this).text("开始")
         $(this).attr("id","ks");
         ruzhucloseBox();
     })
-
-    // //新建密码
-    // $(document).on("click","#gb",function() {
-    //     //ajax
-    //     closeBox();
-    // })
-
 
 
 })

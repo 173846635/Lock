@@ -398,6 +398,7 @@
     <div  class="wj">
         <div class="bt"><h4>修改信息</h4></div>
         <HR align=center width=100% color=#ccc SIZE=2>
+        <div style=" display: none;" id="scbj">0</div>
         <div id="zjfjDiv" class="nr1">
 
         </div>

@@ -110,7 +110,6 @@ function checkOut(){
 }
 
 $(function() {
-    account();//查询是否以登录；
 
 
 

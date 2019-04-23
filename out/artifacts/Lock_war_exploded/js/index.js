@@ -5,6 +5,9 @@ function fjscjh(id){
     var tr="'#"+id+"'"
      $("#"+id+"").remove();
 
+    $("#scbj").empty();
+    $("#scbj").append("1");
+
 }
 
 
@@ -12,6 +15,8 @@ function fjscjh(id){
 
 //增删房间页面
 function getRoomsNum(id){
+    $("#scbj").empty();
+    $("#scbj").append("0");
     var ids= id.split('_');
     var apartmentId= ids[0];
     var floor= ids[1];
@@ -71,12 +76,18 @@ function getRoomsNum(id){
 function addroom(){
     var btns = $('.xzfjbj1').map(function(){return $(this).val();})
     console.log("新增房间号="+btns.toArray());
-    if(btns.toArray()=="")
+    var bj=$("#scbj").text();
+    if(bj==1)
     {
-        alert("没有任何修改");
-        console.log("新增房间号1");
-        zsfjcloseBox();
-        return 0;
+        window.location.replace("/lock/index");
+    }else {
+        if(btns.toArray()=="")
+        {
+            alert("没有任何修改");
+            console.log("新增房间号1");
+            zsfjcloseBox();
+            return 0;
+        }
     }
     var jsona = {};
     jsona["rooms"] =btns.toArray();//数组化
@@ -152,7 +163,6 @@ function delectRoom(roomId){
 }
 
 $(function() {
-    account();//查询是否以登录；
     var n=1;
 
     //添加房间前端

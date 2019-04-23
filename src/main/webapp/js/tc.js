@@ -33,11 +33,17 @@ function zsfjpopBox() {
 /*点击关闭增删房间*/
 function zsfjcloseBox() {
     // zjfjk3
-    console.log("关闭增删房间页面")
-    var zsfjtc = document.getElementById("zsfjtc");
-    var popLayer2 = document.getElementById("popLayer2");
-    zsfjtc.style.display = "none";
-    popLayer2.style.display = "none";
+    var bj=$("#scbj").text();
+    if(bj==1)
+    {
+        window.location.replace("/lock/index");
+    }else {
+        console.log("关闭增删房间页面")
+        var zsfjtc = document.getElementById("zsfjtc");
+        var popLayer2 = document.getElementById("popLayer2");
+        zsfjtc.style.display = "none";
+        popLayer2.style.display = "none";
+    }
 }
 
 /*点击弹出修改租金*/
