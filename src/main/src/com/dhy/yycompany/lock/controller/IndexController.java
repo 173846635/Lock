@@ -64,7 +64,7 @@ public class IndexController {
         int adminPermission = administrator.getAdminPermission();//权限
 
         List<Map<String, Object>> rooms = indexServiceImpl.getRooms();
-        System.out.println(rooms.size());
+        System.out.println("rooms长度"+rooms.size());
 
         mod.addAttribute("rooms",rooms);
 
@@ -84,7 +84,7 @@ public class IndexController {
         System.out.println("left");
         List<Map<String, Object>> rooms = indexServiceImpl.getRooms();
         JSON  toJSON= (JSON) JSONArray.toJSON(rooms);
-        System.out.println(rooms.size());
+        System.out.println("roomssize="+rooms.size());
 
         return toJSON;
     }

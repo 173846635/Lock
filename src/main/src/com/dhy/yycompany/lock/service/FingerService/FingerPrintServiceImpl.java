@@ -173,12 +173,17 @@ public class FingerPrintServiceImpl implements FingerPrintService {
                     map.put("detail", "创建指纹文件失败");
                 }
             }
-
+            Process ps3 = null;
+            ps3 = Runtime.getRuntime().exec("python " + path1 + "/fingerSplit/empty.py");
+            status1 = ps3.waitFor();//返回0为成功
+            System.out.println(status1);
+            System.out.println("清空指纹成功");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
 
         return map;
     }

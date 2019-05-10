@@ -15,9 +15,36 @@ PS_LoadChar=[0XEF,0X01,0XFF,0XFF,0XFF,0XFF,0X01,0X00,0X06,0X07,0X01,0X00,0X07,0X
 PS_UpChar=  [0XEF,0X01,0XFF,0XFF,0XFF,0XFF,0X01,0X00,0X04,0X08,0X01,0X00,0X0E]
 #print('validTempleteNum:')
 s.write(valid)
-time.sleep(2)
+# time.sleep(2)
 number=s.inWaiting()
-read= str(binascii.b2a_hex(s.read(number)))[2:-1]
+time_start=time.time()
+while True:
+    #time.sleep(0.5)
+    # print("inWaiting")
+    number=s.inWaiting()
+    # print("number==",number)
+    # 应答包12个字节
+    if number>=14:
+        # time_end=time.time()
+        # print(number)
+        read= str(binascii.b2a_hex(s.read(number)))[2:-1]
+        # print(read)
+        # print(read[19])
+        if read[19]=='0':
+            # print("valid成功")
+            break
+        else:
+            # print("重发指纹信息")
+            s.write(valid)
+            time_start=time.time()
+    time_end=time.time()
+    if (time_end-time_start)>2:
+        # print("超过2秒没有应答包,重新发送")
+        s.write(valid)
+        time_start=time.time()
+# print('totally cost',time_end-time_start)
+# s.close()
+# read= str(binascii.b2a_hex(s.read(number)))[2:-1]
 # print(read[19])
 # if read[19]=='0':
 #     print("OK")
@@ -172,9 +199,36 @@ PS_LoadChar[14]=num5
 
 
 s.write(StoreChar)
-time.sleep(2)
-number=s.inWaiting()
-read= str(binascii.b2a_hex(s.read(number)))[2:-1]
+time_start=time.time()
+while True:
+    #time.sleep(0.5)
+    # print("inWaiting")
+    number=s.inWaiting()
+    # print("number==",number)
+    # 应答包12个字节
+    if number>=12:
+        # time_end=time.time()
+        # print(number)
+        read= str(binascii.b2a_hex(s.read(number)))[2:-1]
+        # print(read)
+        # print(read[19])
+        if read[19]=='0':
+            # print("StoreChar成功")
+            break
+        else:
+            # print("重发指纹信息")
+            s.write(StoreChar)
+            time_start=time.time()
+    time_end=time.time()
+    if (time_end-time_start)>2:
+        # print("超过2秒没有应答包,重新发送")
+        s.write(StoreChar)
+        time_start=time.time()
+# print('totally cost',time_end-time_start)
+# s.close()
+# time.sleep(2)
+# number=s.inWaiting()
+# read= str(binascii.b2a_hex(s.read(number)))[2:-1]
 # print(read)
 # if read[19]=='0':
 #     print("指纹存到flash成功")
@@ -185,23 +239,50 @@ read= str(binascii.b2a_hex(s.read(number)))[2:-1]
 
 #现在开始上传指纹数据
 s.write(PS_LoadChar)
-time.sleep(2)
-number=s.inWaiting()
+time_start=time.time()
+while True:
+    #time.sleep(0.5)
+    # print("inWaiting")
+    number=s.inWaiting()
+    # print("number==",number)
+    # 应答包12个字节
+    if number>=12:
+        # time_end=time.time()
+        # print(number)
+        read= str(binascii.b2a_hex(s.read(number)))[2:-1]
+        # print(read)
+        # print(read[19])
+        if read[19]=='0':
+            # print("PS_LoadChar成功")
+            break
+        else:
+            # print("重发指纹信息")
+            s.write(PS_LoadChar)
+            time_start=time.time()
+    time_end=time.time()
+    if (time_end-time_start)>2:
+        # print("超过2秒没有应答包,重新发送")
+        s.write(PS_LoadChar)
+        time_start=time.time()
+# print('totally cost',time_end-time_start)
+# s.close()
+# time.sleep(2)
+# number=s.inWaiting()
 #print(s.read(number))
-read= str(binascii.b2a_hex(s.read(number)))[2:-1]
+# read= str(binascii.b2a_hex(s.read(number)))[2:-1]
 #read=s.read(number)
 # print (read)
 # if read[19]=='0':
 #     print("指纹读取成功")
 # else:
 #     print("指纹读取失败")
-s.write(PS_UpChar)
-time.sleep(2)
-number=s.inWaiting()
-#print(number)
-#print(s.read(number))
-read= str(binascii.b2a_hex(s.read(number)))[2:-1]
-#print(read)
+# s.write(PS_UpChar)
+# time.sleep(2)
+# number=s.inWaiting()
+# #print(number)
+# #print(s.read(number))
+# read= str(binascii.b2a_hex(s.read(number)))[2:-1]
+# #print(read)
 
 # if read[19]=='0':
 #     print("指纹上传，接收后续数据包")
@@ -209,7 +290,7 @@ read= str(binascii.b2a_hex(s.read(number)))[2:-1]
 #     print("指纹上传失败")
 
 s.write(PS_UpChar)
-time.sleep(2)
+time.sleep(3)
 number=s.inWaiting()
 f=open(pathF+'/'+num+'.FBI','wb')
 #print(f)
@@ -217,7 +298,6 @@ s.read(12)
 number1=s.inWaiting()
 #print(number1)
 f.write(s.read(number-12))
-
 f.close()
 s.close()
 #print("---------------------------")

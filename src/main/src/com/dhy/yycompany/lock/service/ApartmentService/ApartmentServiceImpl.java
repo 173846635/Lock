@@ -121,6 +121,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     public Map<String,Object> updateApartmentFloor(int apartmentId, String[] floors){
+        System.out.println("floors="+floors);
         Map<String, Object> map = new HashMap<>();
         SqlSession sqlSession = sqlSessionFactory.openSession();
         RoomMapper roomMapper = sqlSession.getMapper(RoomMapper.class);
@@ -131,6 +132,7 @@ public class ApartmentServiceImpl implements ApartmentService {
         List<Integer> IntegerList = new ArrayList<Integer>();
         for (String x : stringB) {
             Integer z = Integer.parseInt(x);
+            System.out.println("z="+z);
             IntegerList.add(z);
         }
 
@@ -148,6 +150,7 @@ public class ApartmentServiceImpl implements ApartmentService {
         int i1=1;
         for(int i=0;i<floors.length;i++) {
             int floor = Integer.parseInt(floors[i]);
+            System.out.println("floor2="+floor);
             room.setrApartmentId(apartmentId);
             room.setrFloor(floor);
             room.setrNum("-1");
@@ -167,7 +170,9 @@ public class ApartmentServiceImpl implements ApartmentService {
         else  if(i1==1){
             ApartmentMapper apartmentMapper = sqlSession.getMapper(ApartmentMapper.class);
             Apartment apartment = apartmentMapper.selectByPrimaryKey(apartmentId);
-            apartment.setaFloorNum(apartment.getaFloorNum()+floors.length);
+            int i2 = Integer.parseInt(apartment.getaFloorNum());
+            int i3=i2+floors.length;
+            apartment.setaFloorNum(Integer.toString(i3));
             int i = apartmentMapper.updateByPrimaryKeySelective(apartment);
             if(i==0)
             {

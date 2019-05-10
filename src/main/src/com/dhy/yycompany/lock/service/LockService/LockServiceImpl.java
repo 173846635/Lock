@@ -34,10 +34,10 @@ public class LockServiceImpl implements LockService{
         LockInfoMapper lockInfoMapper = sqlSession.getMapper(LockInfoMapper.class);
         LockInfo lockInfo = lockInfoMapper.selectByPrimaryKey(lockId);
         int status = lockInfo.getlStatus();
-        if(status==1)
+        if(status==0)
         {
             lockInfo.setlStatusStr("开");
-        }else if(status==0)
+        }else if(status==1)
         {
             lockInfo.setlStatusStr("关");
         }
@@ -272,5 +272,24 @@ public class LockServiceImpl implements LockService{
         System.out.println("000="+json);
         sqlSession.close();
         return json;
+    }
+
+    public JSON getLockStatus(int lockId){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        LockInfoMapper lockInfoMapper = sqlSession.getMapper(LockInfoMapper.class);
+        LockInfo lockInfo = lockInfoMapper.selectByPrimaryKey(lockId);
+        int status = lockInfo.getlStatus();
+        HashMap<String, Object> map = new HashMap<>();
+
+        if(lockInfo!=null){
+            map.put("result",0);
+            map.put("detail","门锁状态读取成功");
+            map.put("status",status);
+        }else{
+            map.put("result",1);
+            map.put("detail","门锁不存在");
+        }
+        JSONObject jsonObject = new JSONObject(map);
+        return  jsonObject;
     }
 }

@@ -31,7 +31,7 @@ public class PublicController {
     //开门
     @RequestMapping(value = {"open"})
     @ResponseBody
-    public JSON open(@RequestParam("lockId") int lockId)
+    public JSON open(@RequestParam(value="lockId") int lockId)
     {
         HttpSession session = GetSessionUtil.getSession();
         int userId = (int) session.getAttribute("userId");
@@ -79,5 +79,14 @@ public class PublicController {
     @RequestMapping("hint")
     public String toKey(){
         return "hint.html";
+    }
+
+    //查询是否以登录
+    @RequestMapping(value = {"lockoff"})
+    @ResponseBody
+    public JSON lockoff(@RequestParam("lockId") int lockId)
+    {
+        JSON lockStatus = lockServiceImpl.getLockStatus(lockId);
+        return lockStatus;
     }
 }

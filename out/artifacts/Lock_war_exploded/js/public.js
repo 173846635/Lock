@@ -692,6 +692,8 @@ function account(){
 
 
 
+
+
 //公共读取
 $(function() {
     //获取本人信息
@@ -721,14 +723,14 @@ $(function() {
 
     var onOffjh= $("#onOffbj").text();
     console.log("onoff="+onOffjh);
-    if(onOffjh==1)
+    if(onOffjh==0)
     {
         console.log("门开着")
         $(".div1").attr("name","on")
-        $(".div1").toggleClass('close1');
-        $(".div1").toggleClass('open1');
-        $(".div1").children(".div2").toggleClass('close2');
-        $(".div1").children(".div2").toggleClass('open2');
+        $(".div1").addClass('close1');
+        $(".div1").removeClass('open1');
+        $(".div1").children(".div2").addClass('close2');
+        $(".div1").children(".div2").removeClass('open2');
     }
 
     $(".div1").on('click',function() {
@@ -763,12 +765,52 @@ $(function() {
             {
                 console.log("开门")
                 $(this).attr("name","on")
-                $(this).toggleClass('close1');
-                $(this).toggleClass('open1');
-                $(this).children(".div2").toggleClass('close2');
-                $(this).children(".div2").toggleClass('open2');
+                $(this).addClass('close1');
+                $(this).removeClass('open1');
+                $(this).children(".div2").addClass('close2');
+                $(this).children(".div2").removeClass('open2');
             }
         }
     })
 
+
+//每隔1.5秒读一次门锁状态
+    setInterval(function(){
+        console.log("读取")
+        var jsona={};
+        jsona["lockId"]=$("#msLockId").text();
+        $.ajax({
+            url: '/lock/lockoff',
+            type: 'POST',
+            data:jsona,
+            dataType: 'json',
+            async: true,
+            success:function(data){
+               console.log(data)
+                var jg=data["result"];
+               if(jg==0)
+               {
+                   if(data["status"]==0)
+                   {
+                       console.log("门开着")
+                       $(".div1").attr("name","on")
+                       $(".div1").addClass('close1');
+                       $(".div1").removeClass('open1');
+                       $(".div1").children(".div2").addClass('close2');
+                       $(".div1").children(".div2").removeClass('open2');
+                   }else {
+                       console.log("门关着")
+                       $(".div1").attr("name","off")
+                       $(".div1").removeClass('close1');
+                       $(".div1").addClass('open1');
+                       $(".div1").children(".div2").removeClass('close2');
+                       $(".div1").children(".div2").addClass('open2');
+                   }
+               }
+            },
+            function(){
+                console.log("错误");
+            }
+        });
+    },1500);
 })

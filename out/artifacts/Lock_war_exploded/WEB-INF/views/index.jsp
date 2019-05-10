@@ -76,6 +76,8 @@
             <div>
              <%
              List<Map<String, Object>> rooms = (List<Map<String, Object>>) request.getAttribute("rooms");
+             if(rooms!=null)
+             {
                  HttpSession session0= GetSessionUtil.getSession();
                  String username = (String) session0.getAttribute("username");
                  for (int i=0;i<rooms.size();i++)
@@ -95,24 +97,26 @@
                     </div>
                     <div class="right_floors">
                     <%
-                        //遍历map
-                        Set set = rooms1.entrySet();
-                        Iterator iterator = set.iterator();
-                        String key=null;
-                        List<Room> value =null;
-                        //楼层循环
-                        while (iterator.hasNext())
+                        if(rooms1!=null)
                         {
-                            Map.Entry mapentry = (Map.Entry) iterator.next();
-                            key = (String) mapentry.getKey();
-                            value=(List<Room>)mapentry.getValue();
-                            if(value.get(0)==null)
+                            //遍历map
+                            Set set = rooms1.entrySet();
+                            Iterator iterator = set.iterator();
+                            String key=null;
+                            List<Room> value =null;
+                            //楼层循环
+                            while (iterator.hasNext())
                             {
-                                value=null;
-                            }
-                            System.out.println(value);
+                                Map.Entry mapentry = (Map.Entry) iterator.next();
+                                key = (String) mapentry.getKey();
+                                value=(List<Room>)mapentry.getValue();
+                                if(value.get(0)==null)
+                                {
+                                    value=null;
+                                }
+                                System.out.println(value);
 
-                    %>
+                        %>
                         <div  id="mao_<%=apartmentID%>_<%=key%>" class="right_floor">
                             <div class="right_floor_z">
                                 <span><%=key%>楼</span>
@@ -192,6 +196,8 @@
                 </div>
                 <HR align=center width=90% color=#ccc SIZE=2>
                 <%
+                        }
+                    }
                     }
                 %>
             </div>

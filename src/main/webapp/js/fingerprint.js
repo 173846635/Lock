@@ -52,6 +52,8 @@ function zwlr(process,userId) {
                     console.log("第二次指纹录入完毕，请放开手指");
                     $('#ts').text("第二次指纹录入完毕，请放开手指");
                     $('#ts').attr("name",3);
+
+
                     break;
                 case 4:
                     console.log("创建指纹文件成功");
@@ -79,10 +81,28 @@ function zwlr(process,userId) {
 
             }
             process=data["result"]+1;
+
             if(process<5&&process>=0)
             {
                 console.log('process：'+process);
-                zwlr(process,userId);
+                if(process==2)
+                {
+                    setTimeout(function(){ zwlr(process,userId); }, 1500);
+                }
+                else if(process==4)
+                {
+0
+                        setTimeout(function(){
+                            console.log("正在上传文件，请稍后");
+                            $('#ts').text("正在上传文件，请稍后...");
+                            }, 1500);
+                        zwlr(process,userId);
+                }
+                else{
+                    zwlr(process,userId);
+                }
+
+
             }
 
 

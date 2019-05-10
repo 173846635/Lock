@@ -22,4 +22,8 @@ public interface LockService {
      * @return
      */
     public JSON getOpenRecord(int lockId,int pageNum);
+
+     /*获得门锁状态
+     */
+    public JSON getLockStatus(int lockId);
 }
